@@ -1,0 +1,68 @@
+unit fmCadastroFornecedores;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.Imaging.pngimage;
+
+type
+  TformCadastroFornecedores = class(TForm)
+    pnFundo: TPanel;
+    pnFundoGrid: TPanel;
+    DBGrid1: TDBGrid;
+    lbEstoque: TLabel;
+    pnTopo: TPanel;
+    lbCadastroFornecedores: TLabel;
+    pnLine: TPanel;
+    pnEsqeurda: TPanel;
+    pnDireita: TPanel;
+    pnMeio: TPanel;
+    edCodigo: TEdit;
+    lbCodigo: TLabel;
+    edNome: TEdit;
+    Label1: TLabel;
+    edCnpj: TEdit;
+    lbCNPJ: TLabel;
+    lnEndereco: TLabel;
+    edEndereco: TEdit;
+    edContato: TEdit;
+    lbContato: TLabel;
+    lnEmail: TLabel;
+    edEmail: TEdit;
+    edCidade: TEdit;
+    lbCidade: TLabel;
+    lbEstado: TLabel;
+    cbEstado: TComboBox;
+    pnIncluir: TPanel;
+    imIncluir: TImage;
+    pnSalvar: TPanel;
+    imSalvar: TImage;
+    pnPesquisar: TPanel;
+    imPesquisar: TImage;
+    pnExcluir: TPanel;
+    imExcluir: TImage;
+    pnFechar: TPanel;
+    imFechar: TImage;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formCadastroFornecedores: TformCadastroFornecedores;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformCadastroFornecedores.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  FreeAndNil(formCadastroFornecedores);
+end;
+
+end.

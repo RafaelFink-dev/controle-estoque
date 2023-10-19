@@ -1,0 +1,121 @@
+unit uConexaoClasse;
+
+Interface
+
+uses
+    IniFiles, SysUtils, Forms, FireDAC.Comp.Client, Dialogs;
+
+
+  const
+    Secao = 'Conexao';
+  type
+   TConexao = class
+   private
+      FPath: string;
+      FServidor: string;
+      FPorta: integer;
+      FDatabase: string;
+      FSenha: string;
+      FUsuario: string;
+      FDriver: string;
+      FCaminhoBanco: String;
+
+
+   public
+      constructor Create(Path: string);
+      procedure LeINI(); virtual;
+      procedure GravaINI(Usuario, Senha, Servidor, Banco: string); virtual;
+      procedure Conectar(var Conexao: TFDConnection);
+      function ObterCaminhoBanco: string;
+
+
+      property Path : string read FPath write FPath;
+      property Servidor : string read FServidor write FServidor;
+      property Porta : integer read FPorta write FPorta;
+      property Database : string read FDatabase write FDatabase;
+      property Senha : string read FSenha write FSenha;
+      property Usuario : string read FUsuario write FUsuario;
+      property Driver : string read FDriver write FDriver;
+      property CaminhoINI: string read FPath write FPath;
+
+
+
+
+   end;
+
+
+implementation
+
+// Lê o arquivo INI e carrega os parâmetros no componente TFDConnection
+procedure TConexao.Conectar(var Conexao: TFDConnection);
+begin
+  LeINI();
+
+  try
+    //Passa os parâmetros para o objeto Conexão
+    Conexao.Connected := false;
+    Conexao.LoginPrompt := false;
+    Conexao.Params.Clear;
+    Conexao.Params.Add('user_name='+ Usuario);
+    Conexao.Params.Add('password='+ Senha);
+    Conexao.Params.Add('Database='+ Database);
+    Conexao.Params.Add('DriverID=fB');
+  Except
+    on E:Exception do
+    ShowMessage('Erro ao carregar parâmetros de conexão!'#13#10 + E.Message);
+  end;
+end;
+
+// Método construtor recebe o caminho do INI e nome da Seção para Leitura
+constructor TConexao.Create(Path: string);
+begin
+  FCaminhoBanco := '';
+  Self.CaminhoINI := Path;
+  Self.Path := Path;
+end;
+
+// Grava os parâmetros recebidos no arquivo INI
+procedure TConexao.GravaINI(Usuario, Senha, Servidor, Banco: string);
+var
+  ArqIni : TIniFile;
+begin
+  ArqIni := TIniFile.Create(Path);
+  try
+    ArqIni.WriteString(Secao, 'Usuario', Usuario);
+    ArqIni.WriteString(Secao, 'Senha', Senha);
+    ArqIni.WriteString(Secao, 'Database', Banco);
+  finally
+     ArqIni.Free;
+  end;
+end;
+
+// Lê os parâmetros do arquivo INI e atribui para os atributos
+{procedure TConexao.LeINI();
+var
+  ArqIni : TIniFile;
+begin
+  ArqIni := TIniFile.Create(Path);
+  try
+    Database    := ArqIni.ReadString(Secao, 'Database', '');
+    Senha       := ArqIni.ReadString(Secao, 'Senha', '');
+    Usuario     := ArqIni.ReadString(Secao, 'Usuario', '');
+
+  finally
+    ArqIni.Free;
+  end;
+end; }
+
+function TConexao.ObterCaminhoBanco: string;
+begin
+  // Verifique se o caminho atual do banco de dados é diferente do armazenado no arquivo INI
+  if not SameText(FCaminhoBanco, Database) then
+  begin
+    // Se forem diferentes, você pode exibir o aviso aqui
+    ShowMessage('O caminho do banco de dados especificado no arquivo INI não corresponde ao caminho atual.');
+  end;
+
+  // Retorne o caminho do banco de dados armazenado no arquivo INI
+  Result := FCaminhoBanco;
+end;
+
+end.

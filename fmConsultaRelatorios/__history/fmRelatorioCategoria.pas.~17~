@@ -1,0 +1,30 @@
+unit fmRelatorioCategoria;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RLReport;
+
+type
+  TformRelatorioCategoria = class(TForm)
+    relatCategoria: TRLReport;
+    RLBand1: TRLBand;
+    RLDBText1: TRLDBText;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formRelatorioCategoria: TformRelatorioCategoria;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  fmConsultaCategorias;
+
+end.

@@ -1,0 +1,39 @@
+unit fmRelatorioGrupos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RLReport;
+
+type
+  TformRelatorioGrupos = class(TForm)
+    relatGrupos: TRLReport;
+    bandaTitulo: TRLBand;
+    lbTitle: TRLLabel;
+    RLSystemInfo1: TRLSystemInfo;
+    lbEmissao: TRLLabel;
+    RLSystemInfo2: TRLSystemInfo;
+    lbPage: TRLLabel;
+    bandaDetalhes: TRLBand;
+    lbNome: TRLLabel;
+    lbDescricao: TRLLabel;
+    RLDBText2: TRLDBText;
+    RLDBText1: TRLDBText;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formRelatorioGrupos: TformRelatorioGrupos;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  fmConsultaGrupos;
+
+end.

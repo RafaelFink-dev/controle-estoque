@@ -1,0 +1,168 @@
+unit fmUnidadeMedida;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.Imaging.pngimage, Vcl.ExtCtrls, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+
+type
+  TformConsultaUMedida = class(TForm)
+    pnFundo: TPanel;
+    pnRodape: TPanel;
+    lbUNMedida: TLabel;
+    pnRodape2: TPanel;
+    pnIncluir: TPanel;
+    imIncluir: TImage;
+    pnEditar: TPanel;
+    imSalvar: TImage;
+    pnExcluir: TPanel;
+    imExcluir: TImage;
+    pnFechar: TPanel;
+    imFechar: TImage;
+    gridCategorias: TDBGrid;
+    pnTopo: TPanel;
+    lbFiltros: TLabel;
+    cbFiltros: TComboBox;
+    pnPesquisar: TPanel;
+    imPesquisar: TImage;
+    dsUnidade: TDataSource;
+    fbUnidade: TFDQuery;
+    procedure pnIncluirMouseEnter(Sender: TObject);
+    procedure pnIncluirMouseLeave(Sender: TObject);
+    procedure imIncluirMouseEnter(Sender: TObject);
+    procedure imIncluirMouseLeave(Sender: TObject);
+    procedure pnEditarMouseEnter(Sender: TObject);
+    procedure pnEditarMouseLeave(Sender: TObject);
+    procedure imSalvarMouseEnter(Sender: TObject);
+    procedure imSalvarMouseLeave(Sender: TObject);
+    procedure pnExcluirMouseEnter(Sender: TObject);
+    procedure pnExcluirMouseLeave(Sender: TObject);
+    procedure imExcluirMouseEnter(Sender: TObject);
+    procedure imExcluirMouseLeave(Sender: TObject);
+    procedure pnFecharClick(Sender: TObject);
+    procedure pnFecharMouseEnter(Sender: TObject);
+    procedure pnFecharMouseLeave(Sender: TObject);
+    procedure imFecharMouseEnter(Sender: TObject);
+    procedure imFecharMouseLeave(Sender: TObject);
+    procedure pnPesquisarMouseEnter(Sender: TObject);
+    procedure pnPesquisarMouseLeave(Sender: TObject);
+    procedure imPesquisarMouseEnter(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formConsultaUMedida: TformConsultaUMedida;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformConsultaUMedida.imExcluirMouseEnter(Sender: TObject);
+begin
+  pnExcluir.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.imExcluirMouseLeave(Sender: TObject);
+begin
+  pnExcluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.imFecharMouseEnter(Sender: TObject);
+begin
+  pnFechar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.imFecharMouseLeave(Sender: TObject);
+begin
+  pnFechar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.imIncluirMouseEnter(Sender: TObject);
+begin
+  pnIncluir.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.imIncluirMouseLeave(Sender: TObject);
+begin
+  pnIncluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.imPesquisarMouseEnter(Sender: TObject);
+begin
+  pnPesquisar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.imSalvarMouseEnter(Sender: TObject);
+begin
+  pnEditar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.imSalvarMouseLeave(Sender: TObject);
+begin
+  pnEditar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnEditarMouseEnter(Sender: TObject);
+begin
+  pnEditar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnEditarMouseLeave(Sender: TObject);
+begin
+  pnEditar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnExcluirMouseEnter(Sender: TObject);
+begin
+  pnExcluir.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnExcluirMouseLeave(Sender: TObject);
+begin
+  pnExcluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformConsultaUMedida.pnFecharMouseEnter(Sender: TObject);
+begin
+  pnFechar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnFecharMouseLeave(Sender: TObject);
+begin
+  pnFechar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnIncluirMouseEnter(Sender: TObject);
+begin
+  pnIncluir.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnIncluirMouseLeave(Sender: TObject);
+begin
+  pnIncluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnPesquisarMouseEnter(Sender: TObject);
+begin
+  pnPesquisar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnPesquisarMouseLeave(Sender: TObject);
+begin
+  pnPesquisar.Color := clMenuHighlight;
+end;
+
+end.

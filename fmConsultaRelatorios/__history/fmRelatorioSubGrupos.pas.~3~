@@ -1,0 +1,25 @@
+unit fmRelatorioSubGrupos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RLReport;
+
+type
+  TformRelatorioSubGrupos = class(TForm)
+    relatSubGrupos: TRLReport;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formRelatorioSubGrupos: TformRelatorioSubGrupos;
+
+implementation
+
+{$R *.dfm}
+
+end.

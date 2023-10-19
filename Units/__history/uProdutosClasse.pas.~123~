@@ -1,0 +1,284 @@
+unit uProdutosClasse;
+
+interface
+
+uses
+  sysUtils, dmConexao, Classes, DB, Vcl.Dialogs;
+
+type
+
+  TProduto = class
+  private
+    FidProduto: Integer;
+    FDescricao: String;
+    FGrupo: Integer;
+    FSubgrupo: Integer;
+    FCategoria: Integer;
+    FFornecedor: Integer;
+    FQuantidade: Integer;
+    FPrecoCompra: Double;
+    FPrecoVenda: Double;
+    FUnidadeMedida: Integer;
+    FImagem: TMemoryStream;
+    FSubgrupoo: Integer;
+    procedure setCategoria(const Value: Integer);
+    procedure setDescricao(const Value: String);
+    procedure setFornecedor(const Value: Integer);
+    procedure setGrupo(const Value: Integer);
+    procedure setIDProduto(const Value: Integer);
+    procedure setImagem(const Value: TMemoryStream);
+    procedure setPrecoCompra(const Value: Double);
+    procedure setPrecoVenda(const Value: Double);
+    procedure setQuantidade(const Value: Integer);
+    procedure setSubgrupo(const Value: Integer);
+    procedure setUnidadeMedida(const Value: Integer);
+
+  public
+
+    Constructor Create;
+    Procedure Excluir;
+    Procedure Salvar;
+
+  published
+    Property IDProduto: Integer read FidProduto write setIDProduto;
+    Property Descricao: String read FDescricao write setDescricao;
+    Property Grupo: Integer read FGrupo write setGrupo;
+    Property Subgrupo: Integer read FSubgrupo write setSubgrupo;
+    Property Categoria: Integer read FCategoria write setCategoria;
+    Property Fornecedor: Integer read FFornecedor write setFornecedor;
+    Property Quantidade: Integer read FQuantidade write setQuantidade;
+    Property PrecoCompra: Double read FPrecoCompra write setPrecoCompra;
+    Property PrecoVenda: Double read FPrecoVenda write setPrecoVenda;
+    Property UnidadeMedida: Integer read FUnidadeMedida write setUnidadeMedida;
+    Property Imagem: TMemoryStream read FImagem write setImagem;
+
+  end;
+
+implementation
+
+{ TProduto }
+
+constructor TProduto.Create;
+begin
+  FidProduto := -1;
+  FImagem := TMemoryStream.Create;
+end;
+
+procedure TProduto.Excluir;
+begin
+  if FidProduto > -1 then
+  begin
+    // Verificar se existem referências a este produto na tabela produtos_e_fornecedores
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add('DELETE FROM produtos_e_fornecedores WHERE IDPRODUTO = :ID');
+    dtmConexao.fbAux.ParamByName('ID').AsInteger := FidProduto;
+    dtmConexao.fbAux.ExecSQL;
+
+    // Agora, você pode excluir o produto
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add('DELETE FROM PRODUTOS   ');
+    dtmConexao.fbAux.SQL.Add(' WHERE IDPRODUTO = :ID ');
+    dtmConexao.fbAux.ParamByName('ID').AsInteger := FidProduto;
+    dtmConexao.fbAux.ExecSQL;
+
+    ShowMessage('Produto excluído com sucesso.');
+  end;
+end;
+
+procedure TProduto.Salvar;
+var
+  IDProdutoInserido : Integer;
+begin
+  if FidProduto = -1 then
+  begin
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add
+      (' INSERT INTO PRODUTOS ( DESCRICAO, IDGRUPO, IDSUBGRUPO, IDCATEGORIA, IDFORNECEDOR, QUANTIDADE,');
+    dtmConexao.fbAux.SQL.Add
+      (' PRECO_COMPRA, PRECO_VENDA, IDUNIDADEMEDIDA, IMAGEM ) VALUES ( ');
+    dtmConexao.fbAux.SQL.Add
+      (' :DESCRICAO, :IDGRUPO, :IDSUBGRUPO, :IDCATEGORIA, :IDFORNECEDOR, :QUANTIDADE, :PRECO_COMPRA, :PRECO_VENDA, :IDUNIDADEMEDIDA, :IMAGEM)');
+
+    dtmConexao.fbAux.ParamByName('DESCRICAO').AsString := FDescricao;
+    dtmConexao.fbAux.ParamByName('IDGRUPO').AsInteger := FGrupo;
+    dtmConexao.fbAux.ParamByName('IDSUBGRUPO').AsInteger := FSubgrupo;
+    dtmConexao.fbAux.ParamByName('IDCATEGORIA').AsInteger := FCategoria;
+    dtmConexao.fbAux.ParamByName('IDFORNECEDOR').AsInteger := FFornecedor;
+    dtmConexao.fbAux.ParamByName('QUANTIDADE').AsInteger := FQuantidade;
+    dtmConexao.fbAux.ParamByName('PRECO_COMPRA').AsFloat := FPrecoCompra;
+    dtmConexao.fbAux.ParamByName('PRECO_VENDA').AsFloat := FPrecoVenda;
+    dtmConexao.fbAux.ParamByName('IDUNIDADEMEDIDA').AsInteger := FUnidadeMedida;
+    // Para atribuirmos um campo blob ao parametro (no nosso caso uma imagem) é
+    // necessario carregarmos o mesmo no parambyname como no exemplo abaixo
+    dtmConexao.fbAux.ParamByName('IMAGEM').LoadFromStream(FImagem, ftBlob);
+
+    dtmConexao.fbAux.ExecSQL;
+
+    //obter o ID do produto inserido
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add('SELECT GEN_ID(GEN_PRODUTOS_ID, 0) AS ID_PRODUTO FROM RDB$DATABASE');
+
+    dtmConexao.fbAux.Open;
+    IDProdutoInserido := dtmConexao.fbAux.FieldByName('ID_PRODUTO').AsInteger;
+
+    if FFornecedor > 0 then
+      begin
+        // Inserção na tabela PRODUTOS_E_FORNECEDORES
+        dtmConexao.fbAux.Close;
+        dtmConexao.fbAux.SQL.Clear;
+        dtmConexao.fbAux.SQL.Add('INSERT INTO PRODUTOS_E_FORNECEDORES (IDPRODUTO, IDFORNECEDOR) VALUES (:IDPRODUTO, :IDFORNECEDOR)');
+        dtmConexao.fbAux.ParamByName('IDPRODUTO').AsInteger := IDProdutoInserido;
+        dtmConexao.fbAux.ParamByName('IDFORNECEDOR').AsInteger := FFornecedor;
+        dtmConexao.fbAux.ExecSQL;
+      end;
+
+    ShowMessage('Produto adicionado com sucesso!');
+  end
+  else
+  begin
+    // Verificar se existe algum produto com esse fornecedor na tabela produtos_e_fornecedores e o normal
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add('SELECT * FROM PRODUTOS_E_FORNECEDORES WHERE IDPRODUTO = :IDPRODUTO');
+    dtmConexao.fbAux.ParamByName('IDPRODUTO').AsInteger := IDProduto;
+    dtmConexao.fbAux.Open;
+
+    if dtmConexao.fbAux.Fields[0].AsInteger > 0 then
+    begin
+      dtmConexao.fbAux.Close;
+      dtmConexao.fbAux.SQL.Clear;
+      dtmConexao.fbAux.SQL.Add('UPDATE PRODUTOS_E_FORNECEDORES SET IDFORNECEDOR = :IDFORNECEDOR WHERE IDPRODUTO = :IDPRODUTO');
+      dtmConexao.fbAux.ParamByName('IDPRODUTO').AsInteger := FidProduto;
+      dtmConexao.fbAux.ParamByName('IDFORNECEDOR').AsInteger := Fornecedor;
+
+      dtmConexao.fbAux.ExecSQL;
+
+      dtmConexao.fbAux.Close;
+      dtmConexao.fbAux.SQL.Clear;
+      dtmConexao.fbAux.SQL.Add
+      (' UPDATE PRODUTOS SET DESCRICAO = :DESCRICAO, IDGRUPO = :IDGRUPO, IDSUBGRUPO = :IDSUBGRUPO, IDCATEGORIA = :IDCATEGORIA, IDFORNECEDOR = :IDFORNECEDOR, QUANTIDADE = :QUANTIDADE,');
+      dtmConexao.fbAux.SQL.Add
+      (' PRECO_COMPRA = :PRECO_COMPRA, PRECO_VENDA = :PRECO_VENDA, IDUNIDADEMEDIDA = :UNIDADEMEDIDA, IMAGEM = :IMAGEM');
+      dtmConexao.fbAux.SQL.Add(' WHERE IDPRODUTO = :ID');
+
+      dtmConexao.fbAux.ParamByName('ID').AsInteger := FidProduto;
+      dtmConexao.fbAux.ParamByName('DESCRICAO').AsString := FDescricao;
+      dtmConexao.fbAux.ParamByName('IDGRUPO').AsInteger := FGrupo;
+      dtmConexao.fbAux.ParamByName('IDSUBGRUPO').AsInteger := FSubgrupo;
+      dtmConexao.fbAux.ParamByName('IDCATEGORIA').AsInteger := FCategoria;
+      dtmConexao.fbAux.ParamByName('IDFORNECEDOR').AsInteger := FFornecedor;
+      dtmConexao.fbAux.ParamByName('QUANTIDADE').AsInteger := FQuantidade;
+      dtmConexao.fbAux.ParamByName('PRECO_COMPRA').AsFloat := FPrecoCompra;
+      dtmConexao.fbAux.ParamByName('PRECO_VENDA').AsFloat := FPrecoVenda;
+      // dtmConexao.fbAux.ParamByName('IDUNIDADEMEDIDA').AsInteger := FUnidadeMedida;
+      // Para atribuirmos um campo blob ao parametro (no nosso caso uma imagem) é
+      // necessario carregarmos o mesmo no parambyname como no exemplo abaixo
+      dtmConexao.fbAux.ParamByName('IMAGEM').LoadFromStream(FImagem, ftBlob);
+
+      dtmConexao.fbAux.ExecSQL;
+
+      ShowMessage('Produto alterado com sucesso!');
+    end
+    else
+    begin
+      // Caso contrário só faz um update normal  e o insert na tabela
+
+      dtmConexao.fbAux.Close;
+      dtmConexao.fbAux.SQL.Clear;
+      dtmConexao.fbAux.SQL.Add('INSERT INTO PRODUTOS_E_FORNECEDORES (IDPRODUTO, IDFORNECEDOR) VALUES (:IDPRODUTO, :IDFORNECEDOR)');
+      dtmConexao.fbAux.ParamByName('IDPRODUTO').AsInteger := IDProduto;
+      dtmConexao.fbAux.ParamByName('IDFORNECEDOR').AsInteger := FFornecedor;
+
+      dtmConexao.fbAux.ExecSQL;
+
+
+      dtmConexao.fbAux.Close;
+      dtmConexao.fbAux.SQL.Clear;
+      dtmConexao.fbAux.SQL.Add
+      (' UPDATE PRODUTOS SET DESCRICAO = :DESCRICAO, IDGRUPO = :IDGRUPO, IDSUBGRUPO = :IDSUBGRUPO, IDCATEGORIA = :IDCATEGORIA, IDFORNECEDOR = :IDFORNECEDOR, QUANTIDADE = :QUANTIDADE,');
+      dtmConexao.fbAux.SQL.Add
+      (' PRECO_COMPRA = :PRECO_COMPRA, PRECO_VENDA = :PRECO_VENDA, IDUNIDADEMEDIDA = :UNIDADEMEDIDA, IMAGEM = :IMAGEM');
+      dtmConexao.fbAux.SQL.Add(' WHERE IDPRODUTO = :ID');
+
+      dtmConexao.fbAux.ParamByName('ID').AsInteger := FidProduto;
+      dtmConexao.fbAux.ParamByName('DESCRICAO').AsString := FDescricao;
+      dtmConexao.fbAux.ParamByName('IDGRUPO').AsInteger := FGrupo;
+      dtmConexao.fbAux.ParamByName('IDSUBGRUPO').AsInteger := FSubgrupo;
+      dtmConexao.fbAux.ParamByName('IDCATEGORIA').AsInteger := FCategoria;
+      dtmConexao.fbAux.ParamByName('IDFORNECEDOR').AsInteger := FFornecedor;
+      dtmConexao.fbAux.ParamByName('QUANTIDADE').AsInteger := FQuantidade;
+      dtmConexao.fbAux.ParamByName('PRECO_COMPRA').AsFloat := FPrecoCompra;
+      dtmConexao.fbAux.ParamByName('PRECO_VENDA').AsFloat := FPrecoVenda;
+      // dtmConexao.fbAux.ParamByName('IDUNIDADEMEDIDA').AsInteger := FUnidadeMedida;
+      // Para atribuirmos um campo blob ao parametro (no nosso caso uma imagem) é
+      // necessario carregarmos o mesmo no parambyname como no exemplo abaixo
+      dtmConexao.fbAux.ParamByName('IMAGEM').LoadFromStream(FImagem, ftBlob);
+
+      dtmConexao.fbAux.ExecSQL;
+
+      ShowMessage('Produto alterado com sucesso!');
+    end;
+  end;
+end;
+
+
+procedure TProduto.setCategoria(const Value: Integer);
+begin
+  FCategoria := Value;
+end;
+
+procedure TProduto.setDescricao(const Value: String);
+begin
+  FDescricao := Value;
+end;
+
+procedure TProduto.setFornecedor(const Value: Integer);
+begin
+  FFornecedor := Value;
+end;
+
+procedure TProduto.setGrupo(const Value: Integer);
+begin
+  FGrupo := Value;
+end;
+
+procedure TProduto.setIDProduto(const Value: Integer);
+begin
+  FidProduto := Value;
+end;
+
+procedure TProduto.setImagem(const Value: TMemoryStream);
+begin
+  FImagem := Value;
+end;
+
+procedure TProduto.setPrecoCompra(const Value: Double);
+begin
+  FPrecoCompra := Value;
+end;
+
+procedure TProduto.setPrecoVenda(const Value: Double);
+begin
+  FPrecoVenda := Value;
+end;
+
+procedure TProduto.setQuantidade(const Value: Integer);
+begin
+  FQuantidade := Value;
+end;
+
+procedure TProduto.setSubgrupo(const Value: Integer);
+begin
+  FSubgrupo := Value;
+end;
+
+procedure TProduto.setUnidadeMedida(const Value: Integer);
+begin
+  FUnidadeMedida := Value;
+end;
+
+end.

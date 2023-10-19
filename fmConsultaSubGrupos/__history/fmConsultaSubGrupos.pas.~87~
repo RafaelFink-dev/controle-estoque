@@ -1,0 +1,270 @@
+unit fmConsultaSubGrupos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.Imaging.pngimage, Vcl.StdCtrls, fmCadastrarSubGrupos,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  dmConexao, uSubGruposClasse,
+  Vcl.Mask, fmRelatorioSubGrupos;
+
+type
+  TformConsultaSubGrupos = class(TForm)
+    pnFundo: TPanel;
+    pnRodape: TPanel;
+    pnRodape2: TPanel;
+    pnTopo: TPanel;
+    gridSubGrupos: TDBGrid;
+    pnIncluir: TPanel;
+    imIncluir: TImage;
+    pnEditar: TPanel;
+    imSalvar: TImage;
+    pnExcluir: TPanel;
+    imExcluir: TImage;
+    pnFechar: TPanel;
+    imFechar: TImage;
+    cbFiltros: TComboBox;
+    lbFiltros: TLabel;
+    pnPesquisar: TPanel;
+    imPesquisar: TImage;
+    lbSubGrupos: TLabel;
+    dsSubGrupos: TDataSource;
+    fbSubGrupos: TFDQuery;
+    lbPesquisa: TLabel;
+    pnLimparFiltros: TPanel;
+    Image1: TImage;
+    pnRelatorio: TPanel;
+    imRelatorio: TImage;
+    edPesquisa: TEdit;
+    procedure pnFecharClick(Sender: TObject);
+    procedure pnIncluirClick(Sender: TObject);
+    procedure pnIncluirMouseEnter(Sender: TObject);
+    procedure pnIncluirMouseLeave(Sender: TObject);
+    procedure pnEditarMouseEnter(Sender: TObject);
+    procedure pnEditarMouseLeave(Sender: TObject);
+    procedure pnExcluirMouseEnter(Sender: TObject);
+    procedure pnExcluirMouseLeave(Sender: TObject);
+    procedure pnFecharMouseEnter(Sender: TObject);
+    procedure pnFecharMouseLeave(Sender: TObject);
+    procedure pnPesquisarMouseEnter(Sender: TObject);
+    procedure pnPesquisarMouseLeave(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure pnEditarClick(Sender: TObject);
+    procedure pnExcluirClick(Sender: TObject);
+    procedure pnLimparFiltrosMouseEnter(Sender: TObject);
+    procedure pnLimparFiltrosMouseLeave(Sender: TObject);
+    procedure pnLimparFiltrosClick(Sender: TObject);
+    procedure pnPesquisarClick(Sender: TObject);
+    procedure pnRelatorioMouseEnter(Sender: TObject);
+    procedure pnRelatorioMouseLeave(Sender: TObject);
+    procedure pnRelatorioClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure cbFiltrosExit(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formConsultaSubGrupos: TformConsultaSubGrupos;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformConsultaSubGrupos.cbFiltrosExit(Sender: TObject);
+begin
+  if cbFiltros.ItemIndex = 0 then
+  begin
+    edPesquisa.Clear;
+    edPesquisa.NumbersOnly := True;
+  end
+  else
+    edPesquisa.Clear;
+    edPesquisa.NumbersOnly := False;
+end;
+
+procedure TformConsultaSubGrupos.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  FreeAndNil(formConsultaSubGrupos);
+end;
+
+procedure TformConsultaSubGrupos.FormShow(Sender: TObject);
+begin
+  fbSubGrupos.Connection := dtmConexao.Conexao;
+  fbSubGrupos.Open;
+end;
+
+procedure TformConsultaSubGrupos.pnEditarClick(Sender: TObject);
+var
+  telaSubGrupos: TformCadastrarSubGrupos;
+begin
+  try
+    telaSubGrupos := TformCadastrarSubGrupos.Create(Self);
+    telaSubGrupos.Caption := 'ALTERAÇÃO DE SUBGRUPOS';
+    telaSubGrupos.edCodigo.Text := fbSubGrupos.FieldByName('IDSUBGRUPO').AsString;
+    telaSubGrupos.edNome.Text := fbSubGrupos.FieldByName('NOME').AsString;
+    telaSubGrupos.edDescricao.Text := fbSubGrupos.FieldByName('DESCRICAO').AsString;
+
+    telaSubGrupos.ShowModal;
+  finally
+    FreeAndNil(telaSubGrupos);
+    fbSubGrupos.Refresh;
+  end;
+end;
+
+procedure TformConsultaSubGrupos.pnEditarMouseEnter(Sender: TObject);
+begin
+  pnEditar.Color := clSilver;
+end;
+
+procedure TformConsultaSubGrupos.pnEditarMouseLeave(Sender: TObject);
+begin
+  pnEditar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaSubGrupos.pnExcluirClick(Sender: TObject);
+var
+  subGruposClasse: TSubGrupos;
+begin
+  try
+    if MessageDlg('Deseja excluir permanentemente esse subgrupo?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      subGruposClasse := TSubGrupos.Create;
+      subGruposClasse.IDSubGrupo := fbSubGrupos.FieldByName('IDSUBGRUPO').AsInteger;
+      subGruposClasse.Excluir;
+
+      FreeAndNil(subGruposClasse);
+    end;
+  finally
+    fbSubGrupos.Refresh;
+  end;
+end;
+
+procedure TformConsultaSubGrupos.pnExcluirMouseEnter(Sender: TObject);
+begin
+  pnExcluir.Color := clSilver;
+end;
+
+procedure TformConsultaSubGrupos.pnExcluirMouseLeave(Sender: TObject);
+begin
+  pnExcluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaSubGrupos.pnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformConsultaSubGrupos.pnFecharMouseEnter(Sender: TObject);
+begin
+  pnFechar.Color := clSilver;
+end;
+
+procedure TformConsultaSubGrupos.pnFecharMouseLeave(Sender: TObject);
+begin
+  pnFechar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaSubGrupos.pnIncluirClick(Sender: TObject);
+var
+  telaCadastrarGrupos: TformCadastrarSubGrupos;
+begin
+  try
+    telaCadastrarGrupos := TformCadastrarSubGrupos.Create(Self);
+    telaCadastrarGrupos.ShowModal;
+  finally
+    FreeAndNil(telaCadastrarGrupos);
+    fbSubGrupos.Refresh;
+  end;
+end;
+
+procedure TformConsultaSubGrupos.pnIncluirMouseEnter(Sender: TObject);
+begin
+  pnIncluir.Color := clSilver;
+end;
+
+procedure TformConsultaSubGrupos.pnIncluirMouseLeave(Sender: TObject);
+begin
+  pnIncluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaSubGrupos.pnLimparFiltrosClick(Sender: TObject);
+begin
+  cbFiltros.ItemIndex := -1;
+  edPesquisa.Clear;
+  fbSubGrupos.Filtered := False;
+end;
+
+procedure TformConsultaSubGrupos.pnLimparFiltrosMouseEnter(Sender: TObject);
+begin
+  pnLimparFiltros.Color := clSilver;
+end;
+
+procedure TformConsultaSubGrupos.pnLimparFiltrosMouseLeave(Sender: TObject);
+begin
+  pnLimparFiltros.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaSubGrupos.pnPesquisarClick(Sender: TObject);
+begin
+  if (cbFiltros.ItemIndex <> -1) and (edPesquisa.Text <> '') then
+  begin
+    if cbFiltros.ItemIndex = 0 then
+    begin
+      fbSubGrupos.Filtered := False;
+      fbSubGrupos.Filter := 'IDSUBGRUPO = ' + QuotedStr(edPesquisa.Text);
+      fbSubGrupos.Filtered := True;
+    end
+    else if cbFiltros.ItemIndex = 1 then
+    begin
+      fbSubGrupos.Filtered := False;
+      fbSubGrupos.Filter := 'NOME LIKE ' +
+        QuotedStr('%' + edPesquisa.Text + '%');
+      fbSubGrupos.Filtered := True;
+    end;
+  end
+  else
+    ShowMessage
+      ('Necessário selecionar algum filtro e preencher uma descrição!');
+end;
+
+procedure TformConsultaSubGrupos.pnPesquisarMouseEnter(Sender: TObject);
+begin
+  pnPesquisar.Color := clSilver;
+end;
+
+procedure TformConsultaSubGrupos.pnPesquisarMouseLeave(Sender: TObject);
+begin
+  pnPesquisar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaSubGrupos.pnRelatorioClick(Sender: TObject);
+begin
+  try
+    formRelatorioSubGrupos := TformRelatorioSubGrupos.Create(Self);
+    formRelatorioSubGrupos.relatSubGrupos.Preview();
+  finally
+    FreeAndNil(formConsultaSubGrupos);
+  end;
+end;
+
+procedure TformConsultaSubGrupos.pnRelatorioMouseEnter(Sender: TObject);
+begin
+  pnRelatorio.Color := clSilver;
+end;
+
+procedure TformConsultaSubGrupos.pnRelatorioMouseLeave(Sender: TObject);
+begin
+  pnRelatorio.Color := clMenuHighlight;
+end;
+
+end.

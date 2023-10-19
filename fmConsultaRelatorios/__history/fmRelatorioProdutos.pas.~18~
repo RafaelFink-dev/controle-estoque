@@ -1,0 +1,53 @@
+unit fmRelatorioProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RLReport;
+
+type
+  TformRelatorioProdutos = class(TForm)
+    relatProdutos: TRLReport;
+    bandaTitulo: TRLBand;
+    lbTitle: TRLLabel;
+    RLSystemInfo1: TRLSystemInfo;
+    lbEmissao: TRLLabel;
+    RLSystemInfo2: TRLSystemInfo;
+    lbPage: TRLLabel;
+    bandaDetalhes: TRLBand;
+    lbDescricao: TRLLabel;
+    RLDBText1: TRLDBText;
+    lbFornecedor: TRLLabel;
+    RLDBText5: TRLDBText;
+    lbGrupo: TRLLabel;
+    lbSubGrupo: TRLLabel;
+    lbCategoria: TRLLabel;
+    RLDBText2: TRLDBText;
+    RLDBText3: TRLDBText;
+    RLDBText4: TRLDBText;
+    lbQuantidade: TRLLabel;
+    RLDBText6: TRLDBText;
+    lbUnidade: TRLLabel;
+    RLDBText7: TRLDBText;
+    lbPrecoCompra: TRLLabel;
+    RLDBText8: TRLDBText;
+    lbPrecoVenda: TRLLabel;
+    RLDBText9: TRLDBText;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formRelatorioProdutos: TformRelatorioProdutos;
+
+implementation
+
+{$R *.dfm}
+
+uses
+  fmConsultarProdutos;
+
+end.

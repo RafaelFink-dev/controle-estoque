@@ -1,0 +1,46 @@
+unit fmCadastrarProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.ComCtrls;
+
+type
+  TformCadastrarProdutos = class(TForm)
+    pnFundo: TPanel;
+    pnRodape: TPanel;
+    pnRodape2: TPanel;
+    pnIncluir: TPanel;
+    imIncluir: TImage;
+    pnSalvar: TPanel;
+    imSalvar: TImage;
+    pnExcluir: TPanel;
+    imExcluir: TImage;
+    pnFechar: TPanel;
+    imFechar: TImage;
+    DBGrid1: TDBGrid;
+    lbEstoque: TLabel;
+    pnTopo: TPanel;
+    ComboBox1: TComboBox;
+    pnPesquisar: TPanel;
+    imPesquisar: TImage;
+    lbFiltrar: TLabel;
+    pgPesquisas: TPageControl;
+    pgDescricao: TTabSheet;
+    lbDescricao: TLabel;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formCadastrarProdutos: TformCadastrarProdutos;
+
+implementation
+
+{$R *.dfm}
+
+end.

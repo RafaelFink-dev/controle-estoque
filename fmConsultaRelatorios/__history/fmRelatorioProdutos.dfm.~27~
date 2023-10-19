@@ -1,0 +1,307 @@
+object formRelatorioProdutos: TformRelatorioProdutos
+  Left = 0
+  Top = 0
+  ClientHeight = 441
+  ClientWidth = 800
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  TextHeight = 15
+  object relatProdutos: TRLReport
+    Left = 0
+    Top = 0
+    Width = 794
+    Height = 1123
+    DataSource = formConsultarProdutos.dsProdutos
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = []
+    object bandaTitulo: TRLBand
+      Left = 38
+      Top = 38
+      Width = 718
+      Height = 71
+      BandType = btTitle
+      Borders.Sides = sdCustom
+      Borders.DrawLeft = False
+      Borders.DrawTop = False
+      Borders.DrawRight = False
+      Borders.DrawBottom = True
+      Borders.Width = 3
+      Borders.FixedBottom = True
+      object lbTitle: TRLLabel
+        Left = 215
+        Top = 16
+        Width = 286
+        Height = 24
+        Alignment = taCenter
+        Caption = 'RELAT'#211'RIO DE PRODUTOS'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLSystemInfo1: TRLSystemInfo
+        Left = 143
+        Top = 46
+        Width = 37
+        Height = 16
+        Info = itNow
+        Text = ''
+      end
+      object lbEmissao: TRLLabel
+        Left = 0
+        Top = 46
+        Width = 137
+        Height = 16
+        Caption = 'Rel'#225'toio emitido em:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLSystemInfo2: TRLSystemInfo
+        Left = 662
+        Top = 49
+        Width = 53
+        Height = 16
+        Alignment = taCenter
+        Info = itPageNumber
+        Text = ''
+      end
+      object lbPage: TRLLabel
+        Left = 662
+        Top = 33
+        Width = 53
+        Height = 16
+        Caption = 'P'#225'gina:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+    end
+    object bandaDetalhes: TRLBand
+      Left = 38
+      Top = 109
+      Width = 718
+      Height = 188
+      Borders.Sides = sdCustom
+      Borders.DrawLeft = False
+      Borders.DrawTop = False
+      Borders.DrawRight = False
+      Borders.DrawBottom = True
+      Borders.Width = 3
+      Borders.FixedBottom = True
+      object lbDescricao: TRLLabel
+        Left = 3
+        Top = 18
+        Width = 143
+        Height = 16
+        Caption = 'Descri'#231#227'o do produto:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText1: TRLDBText
+        Left = 3
+        Top = 40
+        Width = 246
+        Height = 16
+        DataField = 'DESCRICAO'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object lbFornecedor: TRLLabel
+        Left = 3
+        Top = 68
+        Width = 81
+        Height = 16
+        Caption = 'Fornecedor:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText5: TRLDBText
+        Left = 3
+        Top = 90
+        Width = 246
+        Height = 16
+        DataField = 'FORNECEDOR'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object lbGrupo: TRLLabel
+        Left = 255
+        Top = 18
+        Width = 47
+        Height = 16
+        Caption = 'Grupo:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbSubGrupo: TRLLabel
+        Left = 409
+        Top = 18
+        Width = 70
+        Height = 16
+        Caption = 'Subgrupo:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbCategoria: TRLLabel
+        Left = 563
+        Top = 18
+        Width = 70
+        Height = 16
+        Caption = 'Categoria:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText2: TRLDBText
+        Left = 255
+        Top = 40
+        Width = 148
+        Height = 15
+        DataField = 'GRUPO'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object RLDBText3: TRLDBText
+        Left = 409
+        Top = 40
+        Width = 148
+        Height = 15
+        DataField = 'SUBGRUPO'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object RLDBText4: TRLDBText
+        Left = 563
+        Top = 40
+        Width = 144
+        Height = 15
+        DataField = 'CATEGORIA'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object lbQuantidade: TRLLabel
+        Left = 255
+        Top = 68
+        Width = 82
+        Height = 16
+        Caption = 'Quantidade:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText6: TRLDBText
+        Left = 255
+        Top = 90
+        Width = 148
+        Height = 16
+        DataField = 'QUANTIDADE'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object lbUnidade: TRLLabel
+        Left = 409
+        Top = 68
+        Width = 133
+        Height = 16
+        Caption = 'Unidade de medida:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText7: TRLDBText
+        Left = 409
+        Top = 90
+        Width = 148
+        Height = 16
+        DataField = 'UNIDADEMEDIDA'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object lbPrecoCompra: TRLLabel
+        Left = 3
+        Top = 124
+        Width = 117
+        Height = 16
+        Caption = 'Pre'#231'o de compra:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText8: TRLDBText
+        Left = 3
+        Top = 146
+        Width = 114
+        Height = 16
+        DataField = 'PRECO_COMPRA'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+      object RLDBText9: TRLDBText
+        Left = 169
+        Top = 146
+        Width = 102
+        Height = 16
+        DataField = 'PRECO_VENDA'
+        DataSource = formConsultarProdutos.dsProdutos
+        Text = ''
+      end
+    end
+  end
+  object lbPrecoVenda: TRLLabel
+    Left = 207
+    Top = 233
+    Width = 108
+    Height = 16
+    Caption = 'Pre'#231'o de venda:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+end

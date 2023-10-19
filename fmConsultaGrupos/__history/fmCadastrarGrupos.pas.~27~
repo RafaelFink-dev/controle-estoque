@@ -1,0 +1,114 @@
+unit fmCadastrarGrupos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask,
+  Vcl.Imaging.pngimage, Vcl.ExtCtrls, uGruposClasse;
+
+type
+  TformCadastrarGrupos = class(TForm)
+    pnFundo: TPanel;
+    pnRodape: TPanel;
+    pnCancelar: TPanel;
+    imFechar: TImage;
+    pnConfirmar: TPanel;
+    Image1: TImage;
+    edCodigo: TMaskEdit;
+    edNome: TMaskEdit;
+    edDescricao: TMaskEdit;
+    lbCodigo: TLabel;
+    lbNome: TLabel;
+    lbDescricao: TLabel;
+    procedure pnCancelarMouseEnter(Sender: TObject);
+    procedure pnCancelarClick(Sender: TObject);
+    procedure imFecharClick(Sender: TObject);
+    procedure pnCancelarMouseLeave(Sender: TObject);
+    procedure imFecharMouseEnter(Sender: TObject);
+    procedure imFecharMouseLeave(Sender: TObject);
+    procedure pnConfirmarMouseEnter(Sender: TObject);
+    procedure pnConfirmarMouseLeave(Sender: TObject);
+    procedure Image1MouseLeave(Sender: TObject);
+    procedure pnConfirmarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formCadastrarGrupos: TformCadastrarGrupos;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformCadastrarGrupos.Image1MouseLeave(Sender: TObject);
+begin
+  pnConfirmar.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrarGrupos.imFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformCadastrarGrupos.imFecharMouseEnter(Sender: TObject);
+begin
+  pnCancelar.Color := clSilver;
+end;
+
+procedure TformCadastrarGrupos.imFecharMouseLeave(Sender: TObject);
+begin
+  pnCancelar.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrarGrupos.pnCancelarClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformCadastrarGrupos.pnCancelarMouseEnter(Sender: TObject);
+begin
+  pnCancelar.Color := clSilver;
+end;
+
+procedure TformCadastrarGrupos.pnCancelarMouseLeave(Sender: TObject);
+begin
+  pnCancelar.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrarGrupos.pnConfirmarClick(Sender: TObject);
+var
+  gruposClasse : TGrupos;
+begin
+  if edNome.Text <> '' then
+  begin
+    try
+      gruposClasse := TGrupos.create;
+      gruposClasse.IDGrupo := StrToIntDef(edCodigo.Text, -1);
+      gruposClasse.Nome := edNome.Text;
+      gruposClasse.Descricao := edDescricao.Text;
+
+      gruposClasse.Salvar;
+    finally
+      FreeAndNil(gruposClasse);
+      Close;
+    end;
+  end
+  else
+    ShowMessage('Necessário preencher o nome!');
+end;
+
+procedure TformCadastrarGrupos.pnConfirmarMouseEnter(Sender: TObject);
+begin
+  pnConfirmar.Color := clSilver;
+end;
+
+procedure TformCadastrarGrupos.pnConfirmarMouseLeave(Sender: TObject);
+begin
+  pnConfirmar.Color := clMenuHighlight;
+end;
+
+end.

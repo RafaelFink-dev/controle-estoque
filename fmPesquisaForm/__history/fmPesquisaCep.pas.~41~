@@ -1,0 +1,101 @@
+unit fmPesquisaCep;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  dmConexao,
+  Vcl.StdCtrls, REST.Types, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  REST.Response.Adapter, REST.Client, Data.Bind.Components,
+  Data.Bind.ObjectScope;
+
+type
+  TformCep = class(TForm)
+    pnFundo: TPanel;
+    lbCEP: TLabel;
+    edCep: TEdit;
+    pnRodape: TPanel;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
+    RESTResponseDataSetAdapter1: TRESTResponseDataSetAdapter;
+    FDMemTable1: TFDMemTable;
+    pnConfirmar: TPanel;
+    pnFechar: TPanel;
+    procedure imFecharClick(Sender: TObject);
+    procedure pnFecharClick(Sender: TObject);
+    procedure pnConfirmarClick(Sender: TObject);
+    procedure pnConfirmarMouseEnter(Sender: TObject);
+    procedure pnConfirmarMouseLeave(Sender: TObject);
+    procedure pnFecharMouseEnter(Sender: TObject);
+    procedure pnFecharMouseLeave(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  var
+    cep, logradouro, localidade, uf: String;
+  end;
+
+var
+  formCep: TformCep;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformCep.imFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformCep.pnConfirmarClick(Sender: TObject);
+begin
+  RESTRequest1.Resource := edCep.Text + '/json';
+  RESTRequest1.Execute;
+
+  if RESTRequest1.Response.StatusCode = 200 then
+  begin
+    if RESTRequest1.Response.Content.IndexOf('erro') > 0 then
+    begin
+      ShowMessage('CEP NÃO ENCONTRADO!');
+    end
+    else
+      cep := FDMemTable1.FieldByName('cep').AsString;
+    logradouro := FDMemTable1.FieldByName('logradouro').AsString;
+    localidade := FDMemTable1.FieldByName('localidade').AsString;
+    uf := FDMemTable1.FieldByName('uf').AsString;
+    Close;
+  end;
+end;
+
+procedure TformCep.pnConfirmarMouseEnter(Sender: TObject);
+begin
+  pnConfirmar.Color := clSilver;
+end;
+
+procedure TformCep.pnConfirmarMouseLeave(Sender: TObject);
+begin
+  pnConfirmar.Color := clMenuHighlight;
+end;
+
+procedure TformCep.pnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformCep.pnFecharMouseEnter(Sender: TObject);
+begin
+  pnFechar.Color := clSilver;
+end;
+
+procedure TformCep.pnFecharMouseLeave(Sender: TObject);
+begin
+  pnFechar.Color := clRed;
+end;
+
+end.

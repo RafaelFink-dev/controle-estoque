@@ -1,0 +1,27 @@
+object dtmConexao: TdtmConexao
+  Height = 162
+  Width = 208
+  object Conexao: TFDConnection
+    Params.Strings = (
+      'DriverID=FB'
+      'User_Name=sysdba'
+      'Password=masterkey')
+    BeforeConnect = ConexaoBeforeConnect
+    Left = 24
+    Top = 24
+  end
+  object FDPhysFBDriverLink1: TFDPhysFBDriverLink
+    Left = 120
+    Top = 24
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 24
+    Top = 88
+  end
+  object fbAux: TFDQuery
+    Connection = Conexao
+    Left = 136
+    Top = 88
+  end
+end

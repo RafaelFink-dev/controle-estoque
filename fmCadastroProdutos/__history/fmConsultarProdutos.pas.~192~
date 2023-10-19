@@ -1,0 +1,322 @@
+unit fmConsultarProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.Imaging.pngimage,
+  Data.DB, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, fmCadastrarProdutos,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uProdutosClasse, dmConexao, fmRelatorioProdutos,
+  Vcl.Mask;
+
+type
+  TformConsultarProdutos = class(TForm)
+    pnFundo: TPanel;
+    pnRodape: TPanel;
+    pnRodape2: TPanel;
+    pnIncluir: TPanel;
+    imIncluir: TImage;
+    pnEditar: TPanel;
+    imSalvar: TImage;
+    pnExcluir: TPanel;
+    imExcluir: TImage;
+    pnFechar: TPanel;
+    imFechar: TImage;
+    gridProdutos: TDBGrid;
+    lbEstoque: TLabel;
+    pnTopo: TPanel;
+    pnTopo2: TPanel;
+    lbFiltros: TLabel;
+    pnPesquisar: TPanel;
+    imPesquisar: TImage;
+    dsProdutos: TDataSource;
+    fbProdutos: TFDQuery;
+    lbPesquisa: TLabel;
+    pnLimparFiltros: TPanel;
+    Image1: TImage;
+    pnRelatorio: TPanel;
+    imRelatorio: TImage;
+    fbProdutosIDPRODUTO: TIntegerField;
+    fbProdutosDESCRICAO: TStringField;
+    fbProdutosIDGRUPO: TIntegerField;
+    fbProdutosIDSUBGRUPO: TIntegerField;
+    fbProdutosIDCATEGORIA: TIntegerField;
+    fbProdutosIDFORNECEDOR: TIntegerField;
+    fbProdutosIDUNIDADE: TIntegerField;
+    fbProdutosGRUPO: TStringField;
+    fbProdutosSUBGRUPO: TStringField;
+    fbProdutosCATEGORIA: TStringField;
+    fbProdutosFORNECEDOR: TStringField;
+    fbProdutosUNIDADEMEDIDA: TStringField;
+    fbProdutosQUANTIDADE: TIntegerField;
+    fbProdutosPRECO_COMPRA: TSingleField;
+    fbProdutosPRECO_VENDA: TSingleField;
+    fbProdutosIMAGEM: TMemoField;
+    edPesquisa: TEdit;
+    cbFiltros: TComboBox;
+    procedure pnFecharClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure pnIncluirMouseLeave(Sender: TObject);
+    procedure pnIncluirMouseEnter(Sender: TObject);
+    procedure pnEditarMouseEnter(Sender: TObject);
+    procedure pnEditarMouseLeave(Sender: TObject);
+    procedure pnExcluirMouseEnter(Sender: TObject);
+    procedure pnExcluirMouseLeave(Sender: TObject);
+    procedure pnFecharMouseEnter(Sender: TObject);
+    procedure pnFecharMouseLeave(Sender: TObject);
+    procedure pnPesquisarMouseEnter(Sender: TObject);
+    procedure pnPesquisarMouseLeave(Sender: TObject);
+    procedure pnIncluirClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure pnEditarClick(Sender: TObject);
+    procedure pnExcluirClick(Sender: TObject);
+    procedure pnPesquisarClick(Sender: TObject);
+    procedure pnLimparFiltrosClick(Sender: TObject);
+    procedure pnLimparFiltrosMouseEnter(Sender: TObject);
+    procedure pnLimparFiltrosMouseLeave(Sender: TObject);
+    procedure pnRelatorioMouseEnter(Sender: TObject);
+    procedure pnRelatorioMouseLeave(Sender: TObject);
+    procedure pnRelatorioClick(Sender: TObject);
+    procedure cbFiltrosExit(Sender: TObject);
+  private
+    { Private declarations }
+
+  public
+    { Public declarations }
+  end;
+
+var
+  formConsultarProdutos: TformConsultarProdutos;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformConsultarProdutos.cbFiltrosExit(Sender: TObject);
+begin
+  if (cbFiltros.ItemIndex = 0) or (cbFiltros.ItemIndex = 2) or (cbFiltros.ItemIndex = 3) then
+  begin
+    edPesquisa.NumbersOnly := True;
+    edPesquisa.Clear;
+  end
+  else
+    edPesquisa.NumbersOnly := False;
+end;
+
+procedure TformConsultarProdutos.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  FreeAndNil(formConsultarProdutos);
+end;
+
+procedure TformConsultarProdutos.FormShow(Sender: TObject);
+begin
+  fbProdutos.Connection := dtmConexao.Conexao;
+  fbProdutos.Open;
+end;
+
+procedure TformConsultarProdutos.pnEditarClick(Sender: TObject);
+var
+  telaCadastro : TformCadastrasProdutos;
+  msFoto : TMemoryStream;
+begin
+  try
+    telaCadastro := TformCadastrasProdutos.Create(Self);
+    telaCadastro.Caption := 'ALTERAÇÃO DE PRODUTOS';
+    telaCadastro.edCodigoProduto.Text := fbProdutos.FieldByName('IDPRODUTO').AsString;
+    telaCadastro.edDescricao.Text := fbProdutos.FieldByName('DESCRICAO').AsString;
+    telaCadastro.edGrupo.Text := fbProdutos.FieldByName('GRUPO').AsString;
+    telaCadastro.idGrupo := fbProdutos.FieldByName('IDGRUPO').AsInteger;
+    telaCadastro.edSubGrupos.Text := fbProdutos.FieldByName('SUBGRUPO').AsString;
+    telaCadastro.idSubGrupo := fbProdutos.FieldByName('IDSUBGRUPO').AsInteger;
+    telaCadastro.edCategoria.Text := fbProdutos.FieldByName('CATEGORIA').AsString;
+    telaCadastro.idCategoria := fbProdutos.FieldByName('IDCATEGORIA').AsInteger;
+    telaCadastro.edFornecedor.Text := fbProdutos.FieldByName('FORNECEDOR').AsString;
+    telaCadastro.idFornecedor := fbProdutos.FieldByName('IDFORNECEDOR').AsInteger;
+    telaCadastro.edUnidade.Text := fbProdutos.FieldByName('UNIDADEMEDIDA').AsString;
+    telaCadastro.idUnidade := fbProdutos.FieldByName('IDUNIDADE').AsInteger;
+    telaCadastro.edPrecoCompra.Text := fbProdutos.FieldByName('PRECO_COMPRA').AsString;
+    telaCadastro.edPrecoVenda.Text := fbProdutos.FieldByName('PRECO_VENDA').AsString ;
+
+    //instanciamos um TMemoryStraeam
+    msFoto := TMemoryStream.Create;
+    //Carregamos a imagem queRy para o TmemoryStream
+    TBlobField(fbProdutos.FieldByName('IMAGEM')).SaveToStream(msFoto);
+    //seta a posição 0 do tmemory stream. Embora não seja recomendado podemos ter
+    //mais de um arquivo carregado no TMemoryStream
+    msFoto.Position := 0;
+    //Do TmemoryStream pode-se carregadar a imagem para o TImage da tela
+    telaCadastro.imgProduto.Picture.LoadFromStream(msFoto);
+    telaCadastro.ShowModal;
+  finally
+    FreeAndNil(telaCadastro);
+    fbProdutos.Refresh;
+  end;
+end;
+
+procedure TformConsultarProdutos.pnEditarMouseEnter(Sender: TObject);
+begin
+  pnEditar.Color := clSilver;
+end;
+
+procedure TformConsultarProdutos.pnEditarMouseLeave(Sender: TObject);
+begin
+  pnEditar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultarProdutos.pnExcluirClick(Sender: TObject);
+var
+  produtosClasse : TProduto;
+begin
+  try
+    if MessageDlg('Deseja excluir permanentemente esse produto?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes then
+    begin
+      produtosClasse := TProduto.Create;
+      produtosClasse.IDProduto := fbProdutos.FieldByName('IDPRODUTO').AsInteger;
+      produtosClasse.Excluir;
+
+      FreeAndNil(produtosClasse);
+    end;
+  finally
+    fbProdutos.Refresh;
+  end;
+end;
+
+procedure TformConsultarProdutos.pnExcluirMouseEnter(Sender: TObject);
+begin
+  pnExcluir.Color := clSilver;
+end;
+
+procedure TformConsultarProdutos.pnExcluirMouseLeave(Sender: TObject);
+begin
+  pnExcluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultarProdutos.pnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformConsultarProdutos.pnFecharMouseEnter(Sender: TObject);
+begin
+  pnFechar.Color := clSilver;
+end;
+
+procedure TformConsultarProdutos.pnFecharMouseLeave(Sender: TObject);
+begin
+  pnFechar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultarProdutos.pnIncluirClick(Sender: TObject);
+var
+  telaCadastro : TformCadastrasProdutos;
+begin
+  try
+    telaCadastro := TformCadastrasProdutos.Create(Self);
+    telaCadastro.ShowModal;
+  finally
+    FreeAndNil(telaCadastro);
+    fbProdutos.Refresh;
+  end;
+end;
+
+procedure TformConsultarProdutos.pnIncluirMouseEnter(Sender: TObject);
+begin
+  pnIncluir.Color := clSilver;
+end;
+
+procedure TformConsultarProdutos.pnIncluirMouseLeave(Sender: TObject);
+begin
+  pnIncluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultarProdutos.pnLimparFiltrosClick(Sender: TObject);
+begin
+  cbFiltros.ItemIndex := -1;
+  edPesquisa.Clear;
+  fbProdutos.Filtered := False;
+end;
+
+procedure TformConsultarProdutos.pnLimparFiltrosMouseEnter(Sender: TObject);
+begin
+  pnLimparFiltros.Color := clSilver;
+end;
+
+procedure TformConsultarProdutos.pnLimparFiltrosMouseLeave(Sender: TObject);
+begin
+  pnLimparFiltros.Color := clMenuHighlight;
+end;
+
+procedure TformConsultarProdutos.pnPesquisarClick(Sender: TObject);
+begin
+  if (cbFiltros.ItemIndex <> -1) and (edPesquisa.Text <> '') then
+  begin
+    if cbFiltros.ItemIndex = 0 then
+    begin
+      fbProdutos.Filtered := False;
+      fbProdutos.Filter := 'IDPRODUTO = ' + QuotedStr(edPesquisa.Text);
+      fbProdutos.Filtered := True;
+    end
+    else if cbFiltros.ItemIndex = 1 then
+    begin
+      fbProdutos.Filtered := False;
+      fbProdutos.Filter := 'DESCRICAO LIKE ' + QuotedStr('%' + edPesquisa.Text + '%');
+      fbProdutos.Filtered := True;
+    end
+    else if cbFiltros.ItemIndex = 2 then
+    begin
+      fbProdutos.Filtered := False;
+      fbProdutos.Filter := 'PRECO_COMPRA LIKE ' + QuotedStr('%' + edPesquisa.Text + '%');
+      fbProdutos.Filtered := True;
+    end
+    else if cbFiltros.ItemIndex = 3 then
+    begin
+      fbProdutos.Filtered := False;
+      fbProdutos.Filter := 'PRECO_VENDA LIKE ' + QuotedStr('%' + edPesquisa.Text + '%');
+      fbProdutos.Filtered := True;
+    end
+    else if cbFiltros.ItemIndex = 4 then
+    begin
+      fbProdutos.Filtered := False;
+      fbProdutos.Filter := 'GRUPO LIKE ' + QuotedStr('%' + edPesquisa.Text + '%');
+      fbProdutos.Filtered := True;
+    end;
+  end
+  else
+    ShowMessage('Necessário selecionar algum filtro e preencher uma descrição!');
+end;
+
+procedure TformConsultarProdutos.pnPesquisarMouseEnter(Sender: TObject);
+begin
+  pnPesquisar.Color := clSilver;
+end;
+
+procedure TformConsultarProdutos.pnPesquisarMouseLeave(Sender: TObject);
+begin
+  pnPesquisar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultarProdutos.pnRelatorioClick(Sender: TObject);
+begin
+  try
+    formRelatorioProdutos := TformRelatorioProdutos.Create(Self);
+    formRelatorioProdutos.relatProdutos.Preview();
+  finally
+    FreeAndNil(formRelatorioProdutos);
+  end;
+end;
+
+procedure TformConsultarProdutos.pnRelatorioMouseEnter(Sender: TObject);
+begin
+  pnRelatorio.Color := clSilver;
+end;
+
+procedure TformConsultarProdutos.pnRelatorioMouseLeave(Sender: TObject);
+begin
+  pnRelatorio.Color := clMenuHighlight;
+end;
+
+end.

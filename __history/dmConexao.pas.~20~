@@ -1,0 +1,62 @@
+unit dmConexao;
+
+interface
+
+uses
+  System.SysUtils, System.Classes, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FBDef,
+  FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  FireDAC.Comp.UI, FireDAC.Phys.IBBase, FireDAC.Phys.FB, uConexaoClasse, Forms,
+  REST.Types, REST.Response.Adapter, REST.Client, Data.Bind.Components,
+  Data.Bind.ObjectScope;
+
+type
+  TdtmConexao = class(TDataModule)
+    Conexao: TFDConnection;
+    FDPhysFBDriverLink1: TFDPhysFBDriverLink;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    fbAux: TFDQuery;
+    procedure ConexaoBeforeConnect(Sender: TObject);
+  private
+    { Private declarations }
+    conexaoClasse : TConexao;
+  public
+    { Public declarations }
+
+    function VerificaFormAberto(FormName: string): Boolean;
+  end;
+
+var
+  dtmConexao: TdtmConexao;
+
+implementation
+
+{%CLASSGROUP 'Vcl.Controls.TControl'}
+
+{$R *.dfm}
+
+procedure TdtmConexao.ConexaoBeforeConnect(Sender: TObject);
+begin
+  conexaoClasse := TConexao.Create(ExtractFilePath(Application.ExeName) +
+    'Config.ini');
+  conexaoClasse.LeINI;
+  conexaoClasse.Conectar(Conexao);
+end;
+
+function TdtmConexao.VerificaFormAberto(FormName: string): Boolean;
+var
+    i: Integer;
+begin
+  Result := True;
+
+  for i := 0 to (Screen.FormCount - 1) do
+    if (Screen.Forms[i].Name = FormName) then
+    begin
+      Result := False;
+      break;
+    end;
+end;
+
+end.

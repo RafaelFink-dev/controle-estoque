@@ -1,0 +1,69 @@
+unit fmConsultaRelatorios;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls, fmRelProdutos,
+  Vcl.StdCtrls;
+
+type
+  TformConsultarRelatorio = class(TForm)
+    pnFundo: TPanel;
+    pnTopo: TPanel;
+    pnVisualizar: TPanel;
+    imPesquisar: TImage;
+    lbProdutos: TLabel;
+    pnRodape: TPanel;
+    pnFechar: TPanel;
+    imFechar: TImage;
+    procedure pnVisualizarMouseEnter(Sender: TObject);
+    procedure pnVisualizarMouseLeave(Sender: TObject);
+    procedure imPesquisarMouseEnter(Sender: TObject);
+    procedure imPesquisarMouseLeave(Sender: TObject);
+    procedure pnVisualizarClick(Sender: TObject);
+    procedure pnFecharClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formConsultarRelatorio: TformConsultarRelatorio;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformConsultarRelatorio.imPesquisarMouseEnter(Sender: TObject);
+begin
+  pnVisualizar.Color := clSilver;
+end;
+
+procedure TformConsultarRelatorio.imPesquisarMouseLeave(Sender: TObject);
+begin
+  pnVisualizar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultarRelatorio.pnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformConsultarRelatorio.pnVisualizarClick(Sender: TObject);
+begin
+  formRelatorioProdutos.RelProdutos.Preview();
+end;
+
+procedure TformConsultarRelatorio.pnVisualizarMouseEnter(Sender: TObject);
+begin
+  pnVisualizar.Color := clSilver;
+end;
+
+procedure TformConsultarRelatorio.pnVisualizarMouseLeave(Sender: TObject);
+begin
+  pnVisualizar.Color := clMenuHighlight;
+end;
+
+end.

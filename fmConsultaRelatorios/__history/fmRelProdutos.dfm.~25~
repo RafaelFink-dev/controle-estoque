@@ -1,0 +1,141 @@
+object formRelatorioProdutos: TformRelatorioProdutos
+  Left = 0
+  Top = 0
+  Caption = 'RELAT'#211'RIO DE PRODUTOS CADASTRADOS'
+  ClientHeight = 549
+  ClientWidth = 797
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  OnCreate = FormCreate
+  TextHeight = 15
+  object RelProdutos: TRLReport
+    Left = 8
+    Top = 8
+    Width = 794
+    Height = 1123
+    DataSource = dsProdutos
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = []
+    object RLBand1: TRLBand
+      Left = 38
+      Top = 38
+      Width = 718
+      Height = 75
+      BandType = btTitle
+      object lbTitle: TLabel
+        Left = 3
+        Top = 24
+        Width = 710
+        Height = 30
+        Alignment = taCenter
+        Caption = 'RELAT'#211'RIO DE PRODUTOS CADASTRADOS'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Segoe UI'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbGeracao: TLabel
+        Left = 3
+        Top = 56
+        Width = 120
+        Height = 16
+        Caption = 'Relat'#243'rio gerado em:'
+      end
+      object RLSystemInfo1: TRLSystemInfo
+        Left = 129
+        Top = 56
+        Width = 37
+        Height = 16
+        Info = itNow
+        Text = ''
+      end
+    end
+    object RLBand2: TRLBand
+      Left = 38
+      Top = 113
+      Width = 718
+      Height = 64
+      object lbNome: TRLLabel
+        Left = 3
+        Top = 24
+        Width = 113
+        Height = 16
+        Caption = 'Descri'#231#227'o produto:'
+      end
+      object RLDBText1: TRLDBText
+        Left = 3
+        Top = 45
+        Width = 134
+        Height = 16
+        DataField = 'DESCRICAO'
+        DataSource = dsProdutos
+        Text = ''
+      end
+      object RLDBText2: TRLDBText
+        Left = 163
+        Top = 45
+        Width = 51
+        Height = 16
+        DataField = 'GRUPO'
+        DataSource = dsProdutos
+        Text = ''
+      end
+      object RLLabel1: TRLLabel
+        Left = 163
+        Top = 23
+        Width = 43
+        Height = 16
+        Caption = 'Grupo:'
+      end
+      object RLLabel2: TRLLabel
+        Left = 227
+        Top = 23
+        Width = 66
+        Height = 16
+        Caption = 'SubGrupo:'
+      end
+      object RLDBText3: TRLDBText
+        Left = 227
+        Top = 45
+        Width = 78
+        Height = 16
+        DataField = 'SUBGRUPO'
+        DataSource = dsProdutos
+        Text = ''
+      end
+    end
+  end
+  object dsProdutos: TDataSource
+    DataSet = fbProdutos
+    Left = 240
+    Top = 232
+  end
+  object fbProdutos: TFDQuery
+    Connection = dtmConexao.Conexao
+    SQL.Strings = (
+      
+        'SELECT P.idproduto, P.descricao, GP.nome AS GRUPO, SP.nome AS SU' +
+        'BGRUPO, C.nome as CATEGORIA, F.nome AS FORNECEDOR'
+      'FROM PRODUTOS P'
+      'LEFT JOIN GRUPOS GP'
+      '    ON GP.idgrupo = P.idgrupo'
+      'LEFT JOIN SUBGRUPOS SP'
+      '    ON SP.idsubgrupo = P.idsubgrupo'
+      'LEFT JOIN CATEGORIAS C'
+      '    ON C.idcategoria = P.idcategoria'
+      'LEFT JOIN FORNECEDORES F'
+      '    ON F.idfornecedor = P.idfornecedor'
+      'ORDER BY IDPRODUTO')
+    Left = 288
+    Top = 192
+  end
+end

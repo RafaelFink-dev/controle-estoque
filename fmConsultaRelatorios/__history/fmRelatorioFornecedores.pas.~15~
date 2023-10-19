@@ -1,0 +1,34 @@
+unit fmRelatorioFornecedores;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, RLReport;
+
+type
+  TformRelatorioFornecedores = class(TForm)
+    relatFornecedores: TRLReport;
+    RLBand1: TRLBand;
+    lbTitle: TRLLabel;
+    RLBand2: TRLBand;
+    RLDBText1: TRLDBText;
+    lbNome: TRLLabel;
+    RLLabel1: TRLLabel;
+    RLDBText2: TRLDBText;
+    RLLabel2: TRLLabel;
+    RLDBText3: TRLDBText;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formRelatorioFornecedores: TformRelatorioFornecedores;
+
+implementation
+
+{$R *.dfm}
+
+end.

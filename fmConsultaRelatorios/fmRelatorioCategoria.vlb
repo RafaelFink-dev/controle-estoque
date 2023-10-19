@@ -1,0 +1,13 @@
+﻿[formConsultaCategorias.fbCategorias]
+Coordinates=10,10,230,146
+
+[relatCategoria]
+Coordinates=250,10,96,36
+
+[formConsultaCategorias.dsCategorias]
+Coordinates=249,1,233,36
+
+[]
+Coordinates=89,166,68,36
+Visible=True
+

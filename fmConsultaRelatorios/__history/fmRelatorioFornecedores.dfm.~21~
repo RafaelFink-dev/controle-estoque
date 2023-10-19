@@ -1,0 +1,213 @@
+object formRelatorioFornecedores: TformRelatorioFornecedores
+  Left = 0
+  Top = 0
+  ClientHeight = 601
+  ClientWidth = 794
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  TextHeight = 15
+  object relatFornecedores: TRLReport
+    Left = 0
+    Top = 0
+    Width = 794
+    Height = 1123
+    Borders.Width = 3
+    DataSource = formConsultaFornecedores.dsFornecedores
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Arial'
+    Font.Style = []
+    object RLBand1: TRLBand
+      Left = 38
+      Top = 38
+      Width = 718
+      Height = 59
+      BandType = btTitle
+      Borders.Sides = sdCustom
+      Borders.DrawLeft = False
+      Borders.DrawTop = False
+      Borders.DrawRight = False
+      Borders.DrawBottom = True
+      Borders.Width = 3
+      Borders.FixedBottom = True
+      object lbTitle: TRLLabel
+        Left = 1
+        Top = 16
+        Width = 715
+        Height = 24
+        Alignment = taCenter
+        Caption = 'RELAT'#211'RIO DE FORNECEDORES'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -21
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+    end
+    object RLBand2: TRLBand
+      Left = 38
+      Top = 97
+      Width = 718
+      Height = 112
+      object RLDBText1: TRLDBText
+        Left = 3
+        Top = 40
+        Width = 198
+        Height = 16
+        DataField = 'NOME'
+        DataSource = formConsultaFornecedores.dsFornecedores
+        Text = ''
+      end
+      object lbNome: TRLLabel
+        Left = 3
+        Top = 18
+        Width = 138
+        Height = 16
+        Caption = 'Nome do fornecedor:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object lbCNPJ: TRLLabel
+        Left = 207
+        Top = 18
+        Width = 42
+        Height = 16
+        Caption = 'CNPJ:'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText2: TRLDBText
+        Left = 207
+        Top = 40
+        Width = 138
+        Height = 16
+        DataField = 'CNPJ'
+        DataSource = formConsultaFornecedores.dsFornecedores
+        Text = ''
+      end
+      object lbContato: TRLLabel
+        Left = 351
+        Top = 18
+        Width = 53
+        Height = 16
+        Caption = 'Contato'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText3: TRLDBText
+        Left = 351
+        Top = 40
+        Width = 98
+        Height = 16
+        DataField = 'CONTATO'
+        DataSource = formConsultaFornecedores.dsFornecedores
+        Text = ''
+      end
+      object lbEndereco: TRLLabel
+        Left = 351
+        Top = 66
+        Width = 76
+        Height = 16
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText4: TRLDBText
+        Left = 351
+        Top = 83
+        Width = 354
+        Height = 21
+        DataField = 'ENDERECO'
+        DataSource = formConsultaFornecedores.dsFornecedores
+        Text = ''
+      end
+      object lbEmail: TRLLabel
+        Left = 3
+        Top = 66
+        Width = 40
+        Height = 16
+        Caption = 'Email'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText5: TRLDBText
+        Left = 3
+        Top = 88
+        Width = 342
+        Height = 16
+        DataField = 'EMAIL'
+        DataSource = formConsultaFornecedores.dsFornecedores
+        Text = ''
+      end
+      object lbCidade: TRLLabel
+        Left = 463
+        Top = 18
+        Width = 49
+        Height = 16
+        Caption = 'Cidade'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText6: TRLDBText
+        Left = 463
+        Top = 40
+        Width = 138
+        Height = 16
+        DataField = 'CIDADE'
+        DataSource = formConsultaFornecedores.dsFornecedores
+        Text = ''
+      end
+      object lbEstado: TRLLabel
+        Left = 607
+        Top = 18
+        Width = 46
+        Height = 16
+        Caption = 'Estado'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Arial'
+        Font.Style = [fsBold]
+        ParentFont = False
+      end
+      object RLDBText7: TRLDBText
+        Left = 607
+        Top = 40
+        Width = 98
+        Height = 16
+        DataField = 'ESTADO'
+        DataSource = formConsultaFornecedores.dsFornecedores
+        Text = ''
+      end
+    end
+  end
+end

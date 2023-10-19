@@ -1,0 +1,44 @@
+unit fmCadastroFornecedores;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Data.DB, Vcl.Grids,
+  Vcl.DBGrids, Vcl.StdCtrls, Vcl.Imaging.pngimage;
+
+type
+  TformCadastroFornecedores = class(TForm)
+    pnFundo: TPanel;
+    pnFundoGrid: TPanel;
+    DBGrid1: TDBGrid;
+    lbEstoque: TLabel;
+    pnTopo: TPanel;
+    lbCadastroFornecedores: TLabel;
+    pnLine: TPanel;
+    pnEsqeurda: TPanel;
+    pnDireita: TPanel;
+    pnMeio: TPanel;
+    Edit1: TEdit;
+    lbDescricao: TLabel;
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formCadastroFornecedores: TformCadastroFornecedores;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformCadastroFornecedores.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  FreeAndNil(formCadastroFornecedores);
+end;
+
+end.

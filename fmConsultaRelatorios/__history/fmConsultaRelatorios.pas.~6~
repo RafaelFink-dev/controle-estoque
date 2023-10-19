@@ -1,0 +1,46 @@
+unit fmConsultaRelatorios;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Imaging.pngimage, Vcl.ExtCtrls;
+
+type
+  TformConsultarRelatorio = class(TForm)
+    pnFundo: TPanel;
+    pnTopo: TPanel;
+    pnVisualizar: TPanel;
+    imPesquisar: TImage;
+    procedure pnVisualizarMouseEnter(Sender: TObject);
+    procedure pnVisualizarMouseLeave(Sender: TObject);
+    procedure imPesquisarMouseEnter(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formConsultarRelatorio: TformConsultarRelatorio;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformConsultarRelatorio.imPesquisarMouseEnter(Sender: TObject);
+begin
+  pnVisualizar.Color := clSilver;
+end;
+
+procedure TformConsultarRelatorio.pnVisualizarMouseEnter(Sender: TObject);
+begin
+  pnVisualizar.Color := clSilver;
+end;
+
+procedure TformConsultarRelatorio.pnVisualizarMouseLeave(Sender: TObject);
+begin
+  pnVisualizar.Color := clMenuHighlight;
+end;
+
+end.

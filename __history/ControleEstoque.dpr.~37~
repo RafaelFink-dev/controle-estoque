@@ -1,0 +1,44 @@
+program ControleEstoque;
+
+uses
+  Vcl.Forms,
+  fmPrincipal in 'fmPrincipal\fmPrincipal.pas' {formPrincipal},
+  fmConfiguraServidor in 'fmConfiguraServidor\fmConfiguraServidor.pas' {formConfiguraServidor},
+  uConexaoClasse in 'Units\uConexaoClasse.pas',
+  dmConexao in 'dmConexao.pas' {dtmConexao: TDataModule},
+  uProdutosClasse in 'Units\uProdutosClasse.pas',
+  fmConsultarProdutos in 'fmCadastroProdutos\fmConsultarProdutos.pas' {formConsultarProdutos},
+  fmCadastrarProdutos in 'fmCadastroProdutos\fmCadastrarProdutos.pas' {formCadastrasProdutos},
+  fmConsultaFornecedores in 'fmCadastroFornecedores\fmConsultaFornecedores.pas' {formConsultaFornecedores},
+  fmCadastrarFornecedores in 'fmCadastroFornecedores\fmCadastrarFornecedores.pas' {formCadastrarFornecedores},
+  fmConsultaGrupos in 'fmConsultaGrupos\fmConsultaGrupos.pas' {formConsultaGrupos},
+  fmConsultaSubGrupos in 'fmConsultaSubGrupos\fmConsultaSubGrupos.pas' {formConsultaSubGrupos},
+  fmConsultaCategorias in 'fmConsultaCategorias\fmConsultaCategorias.pas' {formConsultaCategorias},
+  fmCadastrarCategorias in 'fmConsultaCategorias\fmCadastrarCategorias.pas' {formCadastrarCategorias},
+  fmCadastrarGrupos in 'fmConsultaGrupos\fmCadastrarGrupos.pas' {formCadastrarGrupos},
+  fmCadastrarSubGrupos in 'fmConsultaSubGrupos\fmCadastrarSubGrupos.pas' {formCadastrarSubGrupos},
+  uFornecedoresClasse in 'Units\uFornecedoresClasse.pas',
+  uGruposClasse in 'Units\uGruposClasse.pas',
+  uSubGruposClasse in 'Units\uSubGruposClasse.pas',
+  uCategoriasClasse in 'Units\uCategoriasClasse.pas',
+  fmConsultaUnidadeMedida in 'fmUnidadeMedida\fmConsultaUnidadeMedida.pas' {formConsultaUMedida},
+  fmRelatorioFornecedores in 'fmConsultaRelatorios\fmRelatorioFornecedores.pas' {formRelatorioFornecedores},
+  fmRelatorioCategoria in 'fmConsultaRelatorios\fmRelatorioCategoria.pas' {formRelatorioCategoria},
+  fmRelatorioGrupos in 'fmConsultaRelatorios\fmRelatorioGrupos.pas' {formRelatorioGrupos},
+  fmRelatorioSubGrupos in 'fmConsultaRelatorios\fmRelatorioSubGrupos.pas' {formRelatorioSubGrupos},
+  fmCadastarUnidadeMedida in 'fmUnidadeMedida\fmCadastarUnidadeMedida.pas' {formCadastroUnidade},
+  uUnidadesMedidaClasse in 'Units\uUnidadesMedidaClasse.pas',
+  fmPesquisaForm in 'fmPesquisaForm\fmPesquisaForm.pas' {formPesquisa},
+  fmPesquisaCep in 'fmPesquisaForm\fmPesquisaCep.pas' {formCep};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TformPrincipal, formPrincipal);
+  Application.CreateForm(TdtmConexao, dtmConexao);
+  Application.CreateForm(TformPesquisa, formPesquisa);
+  Application.CreateForm(TformCep, formCep);
+  Application.Run;
+end.

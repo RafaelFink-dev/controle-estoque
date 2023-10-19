@@ -1,0 +1,306 @@
+unit fmConsultaUnidadeMedida;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.Imaging.pngimage, Vcl.ExtCtrls, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, dmConexao, fmCadastarUnidadeMedida,
+  uUnidadesMedidaClasse, fmRelatorioUnidadesMedida;
+
+type
+  TformConsultaUMedida = class(TForm)
+    pnFundo: TPanel;
+    pnRodape: TPanel;
+    lbUNMedida: TLabel;
+    pnRodape2: TPanel;
+    pnIncluir: TPanel;
+    imIncluir: TImage;
+    pnEditar: TPanel;
+    imSalvar: TImage;
+    pnExcluir: TPanel;
+    imExcluir: TImage;
+    pnFechar: TPanel;
+    imFechar: TImage;
+    gridUnidade: TDBGrid;
+    pnTopo: TPanel;
+    lbFiltros: TLabel;
+    cbFiltros: TComboBox;
+    pnPesquisar: TPanel;
+    imPesquisar: TImage;
+    dsUnidade: TDataSource;
+    fbUnidade: TFDQuery;
+    fbUnidadeIDUNIDADE: TIntegerField;
+    fbUnidadeDESCRICAO: TStringField;
+    fbUnidadeABREVIACAO: TStringField;
+    pnRelatorio: TPanel;
+    imRelatorio: TImage;
+    lbPesquisa: TLabel;
+    edPesquisa: TEdit;
+    pnLimparFiltros: TPanel;
+    Image1: TImage;
+    fbUnidadeATIVO: TStringField;
+    fbUnidadeSITUACAO: TStringField;
+    procedure pnIncluirMouseEnter(Sender: TObject);
+    procedure pnIncluirMouseLeave(Sender: TObject);
+    procedure pnEditarMouseEnter(Sender: TObject);
+    procedure pnEditarMouseLeave(Sender: TObject);
+    procedure pnExcluirMouseEnter(Sender: TObject);
+    procedure pnExcluirMouseLeave(Sender: TObject);
+    procedure pnFecharClick(Sender: TObject);
+    procedure pnFecharMouseEnter(Sender: TObject);
+    procedure pnFecharMouseLeave(Sender: TObject);
+    procedure pnPesquisarMouseEnter(Sender: TObject);
+    procedure pnPesquisarMouseLeave(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure pnEditarClick(Sender: TObject);
+    procedure pnIncluirClick(Sender: TObject);
+    procedure pnExcluirClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure pnRelatorioMouseEnter(Sender: TObject);
+    procedure pnRelatorioMouseLeave(Sender: TObject);
+    procedure pnLimparFiltrosMouseLeave(Sender: TObject);
+    procedure pnLimparFiltrosMouseEnter(Sender: TObject);
+    procedure pnLimparFiltrosClick(Sender: TObject);
+    procedure pnPesquisarClick(Sender: TObject);
+    procedure pnRelatorioClick(Sender: TObject);
+    procedure cbFiltrosExit(Sender: TObject);
+    procedure fbUnidadeCalcFields(DataSet: TDataSet);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  formConsultaUMedida: TformConsultaUMedida;
+
+implementation
+
+{$R *.dfm}
+
+procedure TformConsultaUMedida.cbFiltrosExit(Sender: TObject);
+begin
+  if cbFiltros.ItemIndex = 0 then
+  begin
+    edPesquisa.Clear;
+    edPesquisa.NumbersOnly := True;
+  end
+  else
+    edPesquisa.Clear;
+    edPesquisa.NumbersOnly := False;
+end;
+
+procedure TformConsultaUMedida.fbUnidadeCalcFields(DataSet: TDataSet);
+begin
+ if fbUnidade.FieldByName('ATIVO').AsString = 'T' then
+   fbUnidadeSITUACAO.AsString := 'Ativo'
+ else
+    fbUnidadeSITUACAO.AsString := 'Inativo';
+end;
+
+procedure TformConsultaUMedida.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  FreeAndNil(formConsultaUMedida);
+end;
+
+procedure TformConsultaUMedida.FormShow(Sender: TObject);
+begin
+  fbUnidade.Connection := dtmConexao.Conexao;
+  fbUnidade.Open();
+end;
+
+procedure TformConsultaUMedida.pnEditarClick(Sender: TObject);
+var
+  telaUnidade: TformCadastroUnidade;
+begin
+  if not fbUnidade.IsEmpty then
+  begin
+    try
+      telaUnidade := TformCadastroUnidade.Create(Self);
+      telaUnidade.Caption := 'ALTERAÇÃO DE UNIDADES';
+      telaUnidade.edCodigo.Text := fbUnidade.FieldByName('IDUNIDADE').AsString;
+      telaUnidade.edDescricao.Text := fbUnidade.FieldByName('DESCRICAO').AsString;
+      telaUnidade.edAbreviacao.Text := fbUnidade.FieldByName('ABREVIACAO').AsString;
+
+      if fbUnidade.FieldByName('ATIVO').AsString = 'T' then
+      begin
+        telaUnidade.cbAtivo.Checked := True;
+      end
+      else
+      begin
+        telaUnidade.cbAtivo.Checked := False;
+      end;
+
+      telaUnidade.ShowModal;
+    finally
+      FreeAndNil(telaUnidade);
+      fbUnidade.Refresh;
+    end;
+  end
+  else
+  begin
+    ShowMessage('Nenhuma unidade para alterar!');
+  end;
+end;
+
+procedure TformConsultaUMedida.pnEditarMouseEnter(Sender: TObject);
+begin
+  pnEditar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnEditarMouseLeave(Sender: TObject);
+begin
+  pnEditar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnExcluirClick(Sender: TObject);
+var
+  unidadeClasse: TUnidade;
+begin
+  try
+    if MessageDlg('Deseja excluir permanentemente essa unidade?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+    begin
+      unidadeClasse := TUnidade.Create;
+      unidadeClasse.IDUnidade := fbUnidade.FieldByName('IDUNIDADE').AsInteger;
+      unidadeClasse.Excluir;
+
+      FreeAndNil(unidadeClasse);
+    end;
+  finally
+    fbUnidade.Refresh;
+  end;
+end;
+
+procedure TformConsultaUMedida.pnExcluirMouseEnter(Sender: TObject);
+begin
+  pnExcluir.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnExcluirMouseLeave(Sender: TObject);
+begin
+  pnExcluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnFecharClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformConsultaUMedida.pnFecharMouseEnter(Sender: TObject);
+begin
+  pnFechar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnFecharMouseLeave(Sender: TObject);
+begin
+  pnFechar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnIncluirClick(Sender: TObject);
+var
+  telaUnidade: TformCadastroUnidade;
+begin
+  try
+    telaUnidade := TformCadastroUnidade.Create(Self);
+    telaUnidade.ShowModal
+  finally
+    FreeAndNil(telaUnidade);
+    fbUnidade.Refresh;
+  end;
+end;
+
+procedure TformConsultaUMedida.pnIncluirMouseEnter(Sender: TObject);
+begin
+  pnIncluir.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnIncluirMouseLeave(Sender: TObject);
+begin
+  pnIncluir.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnLimparFiltrosClick(Sender: TObject);
+begin
+  cbFiltros.ItemIndex := -1;
+  edPesquisa.Clear;
+  fbUnidade.Filtered := False;
+end;
+
+procedure TformConsultaUMedida.pnLimparFiltrosMouseEnter(Sender: TObject);
+begin
+  pnPesquisar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnLimparFiltrosMouseLeave(Sender: TObject);
+begin
+  pnPesquisar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnPesquisarClick(Sender: TObject);
+begin
+  if (cbFiltros.ItemIndex <> -1) and (edPesquisa.Text <> '') then
+  begin
+    if cbFiltros.ItemIndex = 0 then
+    begin
+      fbUnidade.Filtered := False;
+      fbUnidade.Filter := 'IDUNIDADE = ' + QuotedStr(edPesquisa.Text);
+      fbUnidade.Filtered := True;
+    end
+    else if cbFiltros.ItemIndex = 1 then
+    begin
+      fbUnidade.Filtered := False;
+      fbUnidade.Filter := 'DESCRICAO LIKE ' +
+        QuotedStr('%' + edPesquisa.Text + '%');
+      fbUnidade.Filtered := True;
+    end
+    else if cbFiltros.ItemIndex = 2 then
+    begin
+      fbUnidade.Filtered := False;
+      fbUnidade.Filter := 'ABREVIACAO LIKE ' +
+        QuotedStr('%' + edPesquisa.Text + '%');
+      fbUnidade.Filtered := True;
+    end
+  end
+  else
+    ShowMessage
+      ('Necessário selecionar algum filtro e preencher uma descrição!');
+end;
+
+procedure TformConsultaUMedida.pnPesquisarMouseEnter(Sender: TObject);
+begin
+  pnPesquisar.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnPesquisarMouseLeave(Sender: TObject);
+begin
+  pnPesquisar.Color := clMenuHighlight;
+end;
+
+procedure TformConsultaUMedida.pnRelatorioClick(Sender: TObject);
+begin
+  try
+    formRelatorioUnidades := TformRelatorioUnidades.Create(Self);
+    formRelatorioUnidades.relatUnidades.Preview();
+  finally
+    FreeAndNil(formRelatorioUnidades);
+  end;
+end;
+
+procedure TformConsultaUMedida.pnRelatorioMouseEnter(Sender: TObject);
+begin
+  pnRelatorio.Color := clSilver;
+end;
+
+procedure TformConsultaUMedida.pnRelatorioMouseLeave(Sender: TObject);
+begin
+  pnRelatorio.Color := clMenuHighlight;
+end;
+
+end.

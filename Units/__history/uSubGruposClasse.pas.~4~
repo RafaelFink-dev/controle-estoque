@@ -1,0 +1,105 @@
+unit uSubGruposClasse;
+
+interface
+
+uses
+  sysUtils, dmConexao, Classes, DB, Vcl.Dialogs;
+
+type
+
+  TSubGrupos = class
+
+  private
+    FidSubGrupo: Integer;
+    FNome: String;
+    FDescricao: String;
+    procedure setDescricao(const Value: String);
+    procedure setIDSubGrupo(const Value: Integer);
+    procedure setNome(const Value: String);
+
+  public
+    constructor create;
+    procedure Salvar;
+    procedure Excluir;
+
+  published
+    Property IDSubGrupo: Integer read FidSubGrupo write setIDSubGrupo;
+    Property Nome: String read FNome write setNome;
+    Property Descricao: String read FDescricao write setDescricao;
+
+  end;
+
+implementation
+
+{ TGrupos }
+
+procedure TSubGrupos.Excluir;
+begin
+ if FidSubGrupo > -1 then
+  begin
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add('DELETE FROM SUBGRUPOS   ');
+    dtmConexao.fbAux.SQL.Add(' WHERE IDSUBGRUPO = :ID ');
+    dtmConexao.fbAux.ParamByName('ID').AsInteger := FidSubGrupo;
+    dtmConexao.fbAux.ExecSQL;
+
+    ShowMessage('SubGrupo excluído com sucesso.')
+  end;
+
+end;
+
+procedure TSubGrupos.Salvar;
+begin
+  if FidSubGrupo = -1 then
+  begin
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add('INSERT INTO SUBGRUPOS (NOME, DESCRICAO) VALUES (:NOME, :DESCRICAO)');
+
+    dtmConexao.fbAux.ParamByName('NOME').AsString := FNome;
+    dtmConexao.fbAux.ParamByName('DESCRICAO').AsString := FDescricao;
+    dtmConexao.fbAux.ExecSQL;
+
+    ShowMessage('SubGrupo adicionado com sucesso!');
+  end
+  else
+  begin
+    // Caso contrário faz um update
+    dtmConexao.fbAux.Close;
+    dtmConexao.fbAux.SQL.Clear;
+    dtmConexao.fbAux.SQL.Add(' UPDATE SUBGRUPOS SET NOME = :NOME, DESCRICAO = :DESCRICAO');
+    dtmConexao.fbAux.SQL.Add(' WHERE IDSUBGRUPO = :ID');
+
+    dtmConexao.fbAux.ParamByName('NOME').AsString := FNome;
+    dtmConexao.fbAux.ParamByName('DESCRICAO').AsString := FDescricao;
+
+    dtmConexao.fbAux.ExecSQL;
+
+    ShowMessage('SubGrupo alterado com sucesso!');
+  end;
+end;
+
+
+constructor TSubGrupos.create;
+begin
+  FidSubGrupo := -1;
+end;
+
+procedure TSubGrupos.setDescricao(const Value: String);
+begin
+  FDescricao := Value;
+end;
+
+procedure TSubGrupos.setIDSubGrupo(const Value: Integer);
+begin
+  FidSubGrupo := Value;
+end;
+
+procedure TSubGrupos.setNome(const Value: String);
+begin
+  FNome := Value;
+end;
+
+end.
+

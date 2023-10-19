@@ -1,0 +1,395 @@
+unit fmCadastrarProdutos;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Mask,
+  Vcl.Imaging.pngimage, uProdutosClasse, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, Data.DB,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, dmConexao, fmPesquisaForm, MaskUtils;
+
+type
+  TformCadastrasProdutos = class(TForm)
+    pnFundo: TPanel;
+    lbDescricao: TLabel;
+    edDescricao: TMaskEdit;
+    lbCodigo: TLabel;
+    edCodigoProduto: TMaskEdit;
+    lbGrupos: TLabel;
+    lbSubGrupos: TLabel;
+    lbCategorias: TLabel;
+    lbFornecedores: TLabel;
+    lbQuantidade: TLabel;
+    lbPrecoCompra: TLabel;
+    lbPrecoVenda: TLabel;
+    lbUnidadeMedida: TLabel;
+    pnRodape: TPanel;
+    pnCancelar: TPanel;
+    imFechar: TImage;
+    pnConfirmar: TPanel;
+    Image1: TImage;
+    lbImagem: TLabel;
+    pnFundoImage: TPanel;
+    imgProduto: TImage;
+    OpenDialog: TOpenDialog;
+    pnSelecionarFornecedor: TPanel;
+    pnSelecionarCategoria: TPanel;
+    pnSelecionarSubGrupos: TPanel;
+    pnSelecionarGrupos: TPanel;
+    edGrupo: TEdit;
+    edSubGrupos: TEdit;
+    edCategoria: TEdit;
+    edFornecedor: TEdit;
+    edUnidade: TEdit;
+    pnSelecionarUnidades: TPanel;
+    edPrecoCompra: TEdit;
+    edPrecoVenda: TEdit;
+    edQuantidade: TEdit;
+    pnSelecionarImg: TPanel;
+    fbCategoria: TFDQuery;
+    procedure pnSelecionarImgClick(Sender: TObject);
+    procedure pnCancelarMouseEnter(Sender: TObject);
+    procedure pnCancelarMouseLeave(Sender: TObject);
+    procedure pnConfirmarMouseEnter(Sender: TObject);
+    procedure pnConfirmarMouseLeave(Sender: TObject);
+    procedure pnSelecionarImgMouseLeave(Sender: TObject);
+    procedure pnSelecionarImgMouseEnter(Sender: TObject);
+    procedure pnCancelarClick(Sender: TObject);
+    procedure pnConfirmarClick(Sender: TObject);
+    procedure pnSelecionarGruposClick(Sender: TObject);
+    procedure pnSelecionarGruposMouseEnter(Sender: TObject);
+    procedure pnSelecionarGruposMouseLeave(Sender: TObject);
+    procedure pnSelecionarSubGruposMouseEnter(Sender: TObject);
+    procedure pnSelecionarSubGruposMouseLeave(Sender: TObject);
+    procedure pnSelecionarSubGruposClick(Sender: TObject);
+    procedure pnSelecionarCategoriaMouseEnter(Sender: TObject);
+    procedure pnSelecionarCategoriaMouseLeave(Sender: TObject);
+    procedure pnSelecionarCategoriaClick(Sender: TObject);
+    procedure pnSelecionarFornecedorClick(Sender: TObject);
+    procedure pnSelecionarUnidadesClick(Sender: TObject);
+    procedure pnSelecionarUnidadesMouseEnter(Sender: TObject);
+    procedure pnSelecionarUnidadesMouseLeave(Sender: TObject);
+    procedure edPrecoCompraExit(Sender: TObject);
+    procedure edPrecoVendaKeyPress(Sender: TObject; var Key: Char);
+    procedure FormCreate(Sender: TObject);
+    procedure edPrecoCompraKeyPress(Sender: TObject; var Key: Char);
+    procedure edPrecoVendaExit(Sender: TObject);
+    procedure pnSelecionarFornecedorMouseEnter(Sender: TObject);
+    procedure pnSelecionarFornecedorMouseLeave(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+    function IsImagem(const FileName: string): Boolean;
+    var idGrupo, idSubGrupo, idCategoria, idFornecedor, idUnidade : Integer;
+
+  end;
+
+var
+  formCadastrasProdutos: TformCadastrasProdutos;
+
+
+implementation
+
+{$R *.dfm}
+
+function TformCadastrasProdutos.IsImagem(const FileName: string): Boolean;
+const
+  ImageExtensions = '*.jpg;*.jpeg;*.png;*.bmp';
+var
+  FileExt: string;
+begin
+  // Extrai a extensão do arquivo selecionado.
+  FileExt := LowerCase(ExtractFileExt(FileName));
+
+  // Verifica se a extensão está na lista de extensões de imagem permitidas.
+  Result := Pos(FileExt, LowerCase(ImageExtensions)) > 0;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarCategoriaClick(Sender: TObject);
+var
+  Pesquisa: TformPesquisa;
+begin
+  Pesquisa := TformPesquisa.Create(nil);
+  try
+    Pesquisa.Caption := 'SELEÇÃO DE CATEGORIAS';
+    Pesquisa.fbPesquisa.SQL.Text := 'SELECT IDCATEGORIA, NOME, DESCRICAO FROM CATEGORIAS WHERE ATIVO = ''T''';
+    if Pesquisa.ShowModal = mrOk then
+    begin
+      edCategoria.Text := Pesquisa.fbPesquisa.FieldByname('NOME').AsString;
+      idCategoria :=  Pesquisa.fbPesquisa.FieldByname('IDCATEGORIA').AsInteger;
+    end;
+  finally
+    FreeAndNil(Pesquisa);
+  end;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarCategoriaMouseEnter(
+  Sender: TObject);
+begin
+  pnSelecionarCategoria.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarCategoriaMouseLeave(
+  Sender: TObject);
+begin
+  pnSelecionarCategoria.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarFornecedorClick(Sender: TObject);
+var
+  Pesquisa: TformPesquisa;
+begin
+  Pesquisa := TformPesquisa.Create(nil);
+  try
+    Pesquisa.Caption := 'SELEÇÃO DE FORNECEDORES';
+    Pesquisa.fbPesquisa.SQL.Text := 'SELECT IDFORNECEDOR, NOME FROM FORNECEDORES WHERE ATIVO = ''T''';
+    if Pesquisa.ShowModal = mrOk then
+    begin
+      edFornecedor.Text := Pesquisa.fbPesquisa.FieldByname('NOME').AsString;
+      idFornecedor :=  Pesquisa.fbPesquisa.FieldByname('IDFORNECEDOR').AsInteger;
+    end;
+  finally
+    FreeAndNil(Pesquisa);
+  end;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarFornecedorMouseEnter(
+  Sender: TObject);
+begin
+  pnSelecionarFornecedor.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarFornecedorMouseLeave(
+  Sender: TObject);
+begin
+  pnSelecionarFornecedor.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarGruposClick(Sender: TObject);
+var
+  Pesquisa: TformPesquisa;
+begin
+  Pesquisa := TformPesquisa.Create(nil);
+  try
+    Pesquisa.Caption := 'SELEÇÃO DE GRUPOS';
+    Pesquisa.fbPesquisa.SQL.Text := 'SELECT IDGRUPO, NOME, DESCRICAO FROM GRUPOS WHERE ATIVO = ''T''';
+    if Pesquisa.ShowModal = mrOk then
+    begin
+      edGrupo.Text := Pesquisa.fbPesquisa.FieldByname('NOME').AsString;
+      idGrupo :=  Pesquisa.fbPesquisa.FieldByname('IDGRUPO').AsInteger;
+    end;
+  finally
+    FreeAndNil(Pesquisa);
+  end;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarGruposMouseEnter(Sender: TObject);
+begin
+  pnSelecionarGrupos.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarGruposMouseLeave(Sender: TObject);
+begin
+  pnSelecionarGrupos.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrasProdutos.edPrecoCompraExit(Sender: TObject);
+var
+  valorFormatado : String;
+begin
+  if (valorFormatado <> edPrecoCompra.Text) and (edPrecoCompra.Text > IntToStr(0)) then
+  begin
+    valorFormatado := FormatFloat('0.00', StrToFloat(edPrecoCompra.Text));
+    edPrecoCompra.Text := valorFormatado;
+  end;
+end;
+
+procedure TformCadastrasProdutos.edPrecoCompraKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  // Permite apenas números, pontos (.) e vírgulas (,), ou a tecla Backspace (#8)
+  if not (Key in ['0'..'9', '.', ',', #8]) then
+  begin
+    // Se o caractere não for permitido, impedimos a entrada definindo Key como #0
+    Key := #0;
+  end;
+end;
+
+procedure TformCadastrasProdutos.edPrecoVendaExit(Sender: TObject);
+var
+  valorFormatado : String;
+begin
+  if (valorFormatado <> edPrecoVenda.Text) and (edPrecoVenda.Text > IntToStr(0)) then
+  begin
+    valorFormatado := FormatFloat('0.00', StrToFloat(edPrecoVenda.Text));
+    edPrecoVenda.Text := valorFormatado;
+  end;
+end;
+
+procedure TformCadastrasProdutos.edPrecoVendaKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  // Permite apenas números, pontos (.) e vírgulas (,), ou a tecla Backspace (#8)
+  if not (Key in ['0'..'9', '.', ',', #8]) then
+  begin
+    // Se o caractere não for permitido, impedimos a entrada definindo Key como #0
+    Key := #0;
+  end;
+end;
+
+procedure TformCadastrasProdutos.FormCreate(Sender: TObject);
+begin
+  fbCategoria.Connection := dtmConexao.Conexao;
+  fbCategoria.Open();
+end;
+
+procedure TformCadastrasProdutos.pnCancelarClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TformCadastrasProdutos.pnCancelarMouseEnter(Sender: TObject);
+begin
+  pnCancelar.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnCancelarMouseLeave(Sender: TObject);
+begin
+  pnCancelar.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrasProdutos.pnConfirmarClick(Sender: TObject);
+var
+  Produtos: TProduto;
+begin
+  if (edDescricao.Text <> '') and (edGrupo.Text <> '') and (edSubGrupos.Text <> '') and (edCategoria.Text <> '') and (edFornecedor.Text <> '') then
+  begin
+    try
+      Produtos := TProduto.Create;
+      Produtos.IDProduto := StrToIntDef(edCodigoProduto.Text, -1);
+      Produtos.Descricao := edDescricao.Text;
+      Produtos.Grupo := idGrupo;
+      Produtos.Subgrupo := idSubGrupo;
+      Produtos.Categoria := idCategoria;
+      Produtos.Fornecedor := idFornecedor;
+      Produtos.UnidadeMedida := idUnidade;
+      Produtos.Quantidade := StrToIntDef(edQuantidade.text, 0);
+      Produtos.PrecoCompra := StrToFloat(FormatFloat('0.00', StrToFloat(edPrecoCompra.Text)));
+      Produtos.PrecoVenda := StrToFloat(FormatFloat('0.00', StrToFloat(edPrecoVenda.Text)));
+      imgProduto.Picture.SaveToStream(Produtos.Imagem);
+
+      Produtos.Salvar;
+
+    finally
+      FreeAndNil(Produtos);
+
+      Sleep(50);
+
+      Close;
+    end;
+  end
+  else
+    ShowMessage('Necessário preencher todos campos obrigatórios!');
+end;
+
+procedure TformCadastrasProdutos.pnConfirmarMouseEnter(Sender: TObject);
+begin
+  pnConfirmar.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnConfirmarMouseLeave(Sender: TObject);
+begin
+  pnConfirmar.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarImgClick(Sender: TObject);
+begin
+  if OpenDialog.Execute then
+  begin
+    if IsImagem(OpenDialog.FileName) then
+    begin
+      imgProduto.Picture.LoadFromFile(OpenDialog.FileName);
+    end
+    else
+    begin
+      ShowMessage('O arquivo selecionado não é uma imagem válida.');
+      // Limpe a seleção do diálogo.
+      OpenDialog.FileName := '';
+    end;
+  end;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarImgMouseEnter(Sender: TObject);
+begin
+  pnSelecionarImg.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarImgMouseLeave(Sender: TObject);
+begin
+  pnSelecionarImg.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarSubGruposClick(Sender: TObject);
+var
+  Pesquisa: TformPesquisa;
+begin
+  Pesquisa := TformPesquisa.Create(nil);
+  try
+    Pesquisa.Caption := 'SELEÇÃO DE SUBGRUPOS';
+    Pesquisa.fbPesquisa.SQL.Text := 'SELECT IDSUBGRUPO, NOME, DESCRICAO FROM SUBGRUPOS WHERE ATIVO = ''T''';
+    if Pesquisa.ShowModal = mrOk then
+    begin
+      edSubGrupos.Text := Pesquisa.fbPesquisa.FieldByname('NOME').AsString;
+      idSubGrupo :=  Pesquisa.fbPesquisa.FieldByname('IDSUBGRUPO').AsInteger;
+    end;
+  finally
+    FreeAndNil(Pesquisa);
+  end;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarSubGruposMouseEnter(
+  Sender: TObject);
+begin
+  pnSelecionarSubGrupos.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarSubGruposMouseLeave(
+  Sender: TObject);
+begin
+  pnSelecionarSubGrupos.Color := clMenuHighlight;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarUnidadesClick(Sender: TObject);
+var
+  Pesquisa: TformPesquisa;
+begin
+  Pesquisa := TformPesquisa.Create(nil);
+  try
+    Pesquisa.Caption := 'SELEÇÃO DE UNIDADES';
+    Pesquisa.fbPesquisa.SQL.Text := 'SELECT IDUNIDADE, DESCRICAO FROM UNIDADESMEDIDA WHERE ATIVO = ''T''';
+    if Pesquisa.ShowModal = mrOk then
+    begin
+      edUnidade.Text := Pesquisa.fbPesquisa.FieldByname('DESCRICAO').AsString;
+      idUnidade :=  Pesquisa.fbPesquisa.FieldByname('IDUNIDADE').AsInteger;
+    end;
+  finally
+    FreeAndNil(Pesquisa);
+  end;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarUnidadesMouseEnter(
+  Sender: TObject);
+begin
+  pnSelecionarUnidades.Color := clSilver;
+end;
+
+procedure TformCadastrasProdutos.pnSelecionarUnidadesMouseLeave(
+  Sender: TObject);
+begin
+  pnSelecionarUnidades.Color := clMenuHighlight;
+end;
+
+end.
